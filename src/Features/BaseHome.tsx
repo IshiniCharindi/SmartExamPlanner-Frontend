@@ -1,11 +1,11 @@
 import React from 'react';
-import Login from '../Components/login/login';
+import Dashboard from '../Components/Dashboard/dashboard.tsx';
 
 const BaseHome = () => {
     return (
         <div className="BaseHome">
         
-            <Login/>
+            <Dashboard/>
         </div>
     );
 };
