@@ -83,14 +83,14 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-secondary)]">
+    <div className="min-h-screen py-15 px-4  bg-[var(--color-secondary)]">
     <div className="max-w-md mx-auto">
       <div className="text-center">
         <h2 className="text-3xl font-bold text-dark mb-2">Login to your account</h2>
         <p className="text-dark/80">Enter your credentials to access your account</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="mt-8 bg-[var(--color-bg)] p-8 rounded-lg shadow-md border border-light-gray transition-all duration-300 hover:shadow-lg">
+      <form onSubmit={handleSubmit} className="mt-8 bg-[var(--color-bg)] p-8 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
         <div className="space-y-6">
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-dark  border-light-gray">
