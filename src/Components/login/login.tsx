@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
-import { User } from '../../Models/Users.tsx'; // Adjust the path based on your project structure
+import { User } from '../../Models/Users.tsx';
+import { UserServices } from "../../Models/Users.tsx";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../Redux/store.tsx";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import ToastCustom from "../Other/ToastCustom.tsx";
 
 const Login = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
+  const admin = useSelector((state: RootState) => state.admin);
+
   const [formData, setFormData] = useState<Pick<User, 'username' | 'password'>>({
     username: '',
     password: '',
@@ -39,25 +49,26 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (validateForm()) {
       setIsLoading(true);
       try {
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        console.log('Form submitted:', formData);
-
-        setFormData({
-          username: '',
-          password: '',
-        });
+        const result = await UserServices.loginAttempt(formData, dispatch);
+        if (result) {
+          toast.custom(<ToastCustom type='success' header='Login'>Login Successful</ToastCustom>);
+          navigate('/admin');
+        } else {
+          toast.custom(<ToastCustom type='error' header='Login'>Invalid Username or Password</ToastCustom>);
+        }
       } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred while logging into your account');
+        toast.custom(<ToastCustom type='error' header='Login'>An unexpected error occurred</ToastCustom>);
       } finally {
         setIsLoading(false);
       }
+    } else {
+      toast.custom(<ToastCustom type='warning' header='Login'>Both username and password fields must be filled</ToastCustom>);
     }
   };
 
@@ -69,7 +80,10 @@ const Login = () => {
             <p className="text-dark/80">Enter your credentials to access your account</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-8 bg-[var(--color-bg)] p-8 rounded-lg shadow-md border border-light-gray transition-all duration-300 hover:shadow-lg">
+          <form
+              onSubmit={handleSubmit}
+              className="mt-8 bg-[var(--color-bg)] p-8 rounded-lg shadow-md border border-light-gray transition-all duration-300 hover:shadow-lg"
+          >
             <div className="space-y-6">
               <div>
                 <label htmlFor="username" className="block text-sm font-medium text-dark">

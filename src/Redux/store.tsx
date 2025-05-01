@@ -10,15 +10,15 @@ const persistConfig = {
     whitelist: ['admin'],
 };
 
-// Combine reducers
+
 const rootReducer = combineReducers({
     admin: adminSlice,
 });
 
-// Wrap root reducer with persistReducer
+
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// Create the store
+
 const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
@@ -27,10 +27,10 @@ const store = configureStore({
         }),
 });
 
-// Create persistor
+
 export const persistor = persistStore(store);
 
-// Types
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
