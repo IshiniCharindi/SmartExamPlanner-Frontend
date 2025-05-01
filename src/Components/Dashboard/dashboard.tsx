@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { Menu, Plus, Users, UserCheck } from 'lucide-react';
 import Navbar from '../Navbar/navbar';
 import DashboardCard from '../Dashboard/dashCard';
 
 const Dashboard: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-[var(--color-secondary)]">
@@ -38,7 +42,7 @@ const Dashboard: React.FC = () => {
               description="Manage lecturer information and assignments"
               buttonText="Manage Lecturers"
               icon={Users}
-              onClick={() => console.log('Lecturer clicked')}
+              onClick={() => navigate('/addlecturer')}
             />
             <DashboardCard
               title="Supervisor Allocation"

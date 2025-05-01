@@ -27,7 +27,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
       <p className="text-dark/80 mb-4">{description}</p>
       <button
         onClick={onClick}
-        className="w-full bg-[var(--color-light)] text-white py-2 px-4 rounded hover:bg-gold/90 transition-colors duration-200"
+        className="w-full bg-[var(--color-light)] text-white py-2 px-4 rounded hover:bg-[var(--color-dark)]/90 transition-colors duration-200"
       >
         {buttonText}
       </button>
