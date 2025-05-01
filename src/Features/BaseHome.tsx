@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
+import StudentDataForm from "../Components/ExamShedule/StudentDataForm";
 
-import Signup from '../Components/signup/Signup.tsx';
 
 const BaseHome = () => {
     return (
         <div className="BaseHome">
-            <Signup/>
+        <StudentDataForm/>
         </div>
     );
 };
