@@ -1,9 +1,11 @@
 import React from 'react';
+import SignUp from '../Components/signup/signup';
 
 const BaseHome = () => {
     return (
         <div className="BaseHome">
-            <h1>Hello</h1>
+        
+            <SignUp/>
         </div>
     );
 };
