@@ -1,11 +1,11 @@
 import React from 'react';
-import SignUp from '../Components/signup/signup';
+import Login from '../Components/login/login';
 
 const BaseHome = () => {
     return (
         <div className="BaseHome">
         
-            <SignUp/>
+            <Login/>
         </div>
     );
 };
