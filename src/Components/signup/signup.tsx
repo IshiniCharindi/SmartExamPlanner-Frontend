@@ -119,179 +119,200 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bg py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md mx-auto">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-dark">Create your account</h2>
-        </div>
+    <div className="min-h-screen bg-bg flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-[var(--color-secondary)] pt-0">
+    <div className="max-w-md w-full space-y-8">
+      <div className="text-center">
+        
+        <h2 className="mt-6 text-3xl font-extrabold text-dark">Create your account</h2>
+       
+      </div>
 
-        <form onSubmit={handleSubmit} className="mt-8 bg-white p-8 rounded-lg shadow-lg border border-secondary/30">
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-dark">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  id="firstName"
-                  placeholder='John'
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  className={`mt-1 block w-full rounded-md border ${
-                    errors.firstName ? 'border-red-500' : 'border-secondary'
-                  } px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/70`}
-                />
-                {errors.firstName && (
-                  <p className="mt-1 text-sm text-red-500">{errors.firstName}</p>
-                )}
-              </div>
-
-              <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-dark">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  id="lastName"
-                    placeholder='Doe'
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  className={`mt-1 block w-full rounded-md border ${
-                    errors.lastName ? 'border-red-500' : 'border-secondary'
-                  } px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/70`}
-                />
-                {errors.lastName && (
-                  <p className="mt-1 text-sm text-red-500">{errors.lastName}</p>
-                )}
-              </div>
-            </div>
-
+      <form onSubmit={handleSubmit} className="mt-8 bg-[var(--color-bg)] p-8 rounded-xl shadow-lg border border-secondary/30">
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
-              <label htmlFor="position" className="block text-sm font-medium text-dark">
-                Position
-              </label>
-              <select
-                id="position"
-                name="position"
-                value={formData.position}
-                onChange={handleChange}
-                className={`mt-1 block w-full rounded-md border ${
-                  errors.position ? 'border-red-500' : 'border-secondary'
-                } px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/70`}
-              >
-                <option value="">Select your position</option>
-                {positions.map(pos => (
-                  <option key={pos.value} value={pos.value}>
-                    {pos.label}
-                  </option>
-                ))}
-              </select>
-              {errors.position && (
-                <p className="mt-1 text-sm text-red-500">{errors.position}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="department" className="block text-sm font-medium text-dark">
-                Department
-              </label>
-              <select
-                id="department"
-                name="department"
-                value={formData.department}
-                onChange={handleChange}
-                className={`mt-1 block w-full rounded-md border ${
-                  errors.department ? 'border-red-500' : 'border-secondary'
-                } px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/70`}
-              >
-                <option value="">Select your department</option>
-                {departments.map(dept => (
-                  <option key={dept.value} value={dept.value}>
-                    {dept.label}
-                  </option>
-                ))}
-              </select>
-              {errors.department && (
-                <p className="mt-1 text-sm text-red-500">{errors.department}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium text-dark">
-                Username
+              <label htmlFor="firstName" className="block text-sm font-semibold text-dark">
+                First Name
               </label>
               <input
                 type="text"
-                id="username"
-                placeholder='abc@uwu.ac.lk'
-                name="username"
-                value={formData.username}
+                id="firstName"
+                name="firstName"
+                value={formData.firstName}
                 onChange={handleChange}
-                className={`mt-1 block w-full rounded-md border ${
-                  errors.username ? 'border-red-500' : 'border-secondary'
-                } px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/70`}
+                placeholder="John"
+                className={`mt-1 block w-full rounded-lg border ${
+                  errors.firstName ? 'border-red-500' : 'border-[var(--color-secondary)]'
+                } px-4 py-3 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-200`}
               />
-              {errors.username && (
-                <p className="mt-1 text-sm text-red-500">{errors.username}</p>
+              {errors.firstName && (
+                <p className="mt-1 text-sm text-red-500 animate-fade-in">{errors.firstName}</p>
               )}
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-dark">
-                Password
+              <label htmlFor="lastName" className="block text-sm font-semibold text-dark">
+                Last Name
               </label>
               <input
-                type="password"
-                id="password"
-                placeholder='********'
-                name="password"
-                value={formData.password}
+                type="text"
+                id="lastName"
+                name="lastName"
+                value={formData.lastName}
                 onChange={handleChange}
-                className={`mt-1 block w-full rounded-md border ${
-                  errors.password ? 'border-red-500' : 'border-secondary'
-                } px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/70`}
+                placeholder="Doe"
+                className={`mt-1 block w-full rounded-lg border ${
+                  errors.lastName ? 'border-red-500' : 'border-[var(--color-secondary)]'
+                } px-4 py-3 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-200`}
               />
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-500">{errors.password}</p>
+              {errors.lastName && (
+                <p className="mt-1 text-sm text-red-500 animate-fade-in">{errors.lastName}</p>
               )}
             </div>
-
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-dark">
-                Re-enter Password
-              </label>
-              <input
-                type="password"
-                id="confirmPassword"
-                placeholder='********'
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className={`mt-1 block w-full rounded-md border ${
-                  errors.confirmPassword ? 'border-red-500' : 'border-secondary'
-                } px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/70`}
-              />
-              {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-[var(--color-text)] bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ${
-                isLoading ? 'opacity-75 cursor-not-allowed' : ''
-              }`}
-            >
-              {isLoading ? 'Creating Account...' : 'Create Account'}
-            </button>
           </div>
-        </form>
-      </div>
+
+          <div>
+            <label htmlFor="position" className="block text-sm font-semibold text-dark">
+              Position
+            </label>
+            <select
+              id="position"
+              name="position"
+              value={formData.position}
+              onChange={handleChange}
+              className={`mt-1 block w-full rounded-lg border ${
+                errors.position ? 'border-red-500' : 'border-[var(--color-secondary)]'
+              } px-4 py-3 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-200`}
+            >
+              <option value="">Select your position</option>
+              {positions.map(pos => (
+                <option key={pos.value} value={pos.value}>
+                  {pos.label}
+                </option>
+              ))}
+            </select>
+            {errors.position && (
+              <p className="mt-1 text-sm text-red-500 animate-fade-in">{errors.position}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="department" className="block text-sm font-semibold text-dark">
+              Department
+            </label>
+            <select
+              id="department"
+              name="department"
+              value={formData.department}
+              onChange={handleChange}
+              className={`mt-1 block w-full rounded-lg border ${
+                errors.department ? 'border-red-500' : 'border-[var(--color-secondary)]'
+              } px-4 py-3 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-200`}
+            >
+              <option value="">Select your department</option>
+              {departments.map(dept => (
+                <option key={dept.value} value={dept.value}>
+                  {dept.label}
+                </option>
+              ))}
+            </select>
+            {errors.department && (
+              <p className="mt-1 text-sm text-red-500 animate-fade-in">{errors.department}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="username" className="block text-sm font-semibold text-dark">
+              Username
+            </label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder="abc@uwu.ac.lk"
+              className={`mt-1 block w-full rounded-lg border ${
+                errors.username ? 'border-red-500' : 'border-[var(--color-secondary)]'
+              } px-4 py-3 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-200`}
+            />
+            {errors.username && (
+              <p className="mt-1 text-sm text-red-500 animate-fade-in">{errors.username}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-semibold text-dark">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="••••••••"
+              className={`mt-1 block w-full rounded-lg border ${
+                errors.password ? 'border-red-500' : 'border-[var(--color-secondary)]'
+              } px-4 py-3 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-200`}
+            />
+            {errors.password && (
+              <p className="mt-1 text-sm text-red-500 animate-fade-in">{errors.password}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="confirmPassword" className="block text-sm font-semibold text-dark">
+              Re-enter Password
+            </label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="••••••••"
+              className={`mt-1 block w-full rounded-lg border ${
+                errors.confirmPassword ? 'border-red-500' : 'border-white'
+              } px-4 py-3 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-200`}
+            />
+            {errors.confirmPassword && (
+              <p className="mt-1 text-sm text-red-500 animate-fade-in">{errors.confirmPassword}</p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-semibold text-dark bg-[var(--color-primary)] hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200 ${
+              isLoading ? 'opacity-75 cursor-not-allowed' : ''
+            }`}
+          >
+            {isLoading ? (
+              <span className="flex items-center">
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-dark" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Creating Account...
+              </span>
+            ) : (
+              'Create Account'
+            )}
+          </button>
+
+          <div className="text-center">
+            <p className="text-sm text-dark/70">
+              Already have an account?{' '}
+              <a href="#" className="font-medium text-[var(--color-primary)] hover:text-primary/80 transition-colors">
+                Sign in
+              </a>
+            </p>
+          </div>
+        </div>
+      </form>
     </div>
+  </div>
   );
 };
 
