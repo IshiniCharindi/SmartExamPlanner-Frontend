@@ -28,7 +28,7 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
             
             {/* Exam Schedule Card */}
-            <div className="bg-white p-6 rounded-lg shadow-md border border-light-gray hover:shadow-lg transition-all duration-300">
+            <div className="bg-white p-6 rounded-lg shadow-md  hover:shadow-lg transition-all duration-300">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold text-dark">Exam Schedules</h2>
                 <button className="p-2 text-[var(--color-light)] hover:bg-gold/10 rounded-full">
@@ -42,7 +42,7 @@ const Dashboard = () => {
             </div>
 
             {/* Lecturer Data Card */}
-            <div className="bg-white p-6 rounded-lg shadow-md border border-light-gray hover:shadow-lg transition-all duration-300">
+            <div className="bg-white p-6 rounded-lg shadow-md  hover:shadow-lg transition-all duration-300">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold text-dark">Lecturer Data</h2>
                 <button className="p-2 text-[var(--color-light)] hover:bg-gold/10 rounded-full">
@@ -56,7 +56,7 @@ const Dashboard = () => {
             </div>
 
             {/* Supervisor Allocation Card */}
-            <div className="bg-white p-6 rounded-lg shadow-md border border-light-gray hover:shadow-lg transition-all duration-300">
+            <div className="bg-white p-6 rounded-lg shadow-md  hover:shadow-lg transition-all duration-300">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold text-dark">Supervisor Allocation</h2>
                 <button className="p-2 text-[var(--color-light)] hover:bg-gold/10 rounded-full">
