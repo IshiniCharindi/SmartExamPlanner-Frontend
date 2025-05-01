@@ -1,6 +1,8 @@
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import ScrollToTop from "./Components/Other/ScrollToTop.tsx";
 import BaseHome from "./Features/BaseHome.tsx";
+import Login from "./Components/login/Login.tsx";
+import Signup from "./Components/signup/Signup.tsx";
 function App() {
 
 
@@ -10,6 +12,8 @@ function App() {
         <ScrollToTop />
         <Routes>
           <Route element={<BaseHome/>} path='/'/>
+          <Route element={<Login/>} path='/login'/>
+          <Route element={<Signup/>} path='/signup'/>
         </Routes>
       </BrowserRouter>
     </>

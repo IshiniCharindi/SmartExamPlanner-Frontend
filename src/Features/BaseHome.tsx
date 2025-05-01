@@ -1,13 +1,11 @@
 import React from 'react';
 
-import SignUp from '../Components/signup/signup';
+import Signup from '../Components/signup/Signup.tsx';
 
 const BaseHome = () => {
     return (
         <div className="BaseHome">
-        
-            
-            <SignUp/>
+            <Signup/>
         </div>
     );
 };
