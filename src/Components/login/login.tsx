@@ -62,11 +62,46 @@ const Login = () => {
   };
 
   return (
+<<<<<<< HEAD
       <div className="min-h-screen bg-[var(--color-secondary)] py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md mx-auto">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-dark mb-2">Login to your account</h2>
             <p className="text-dark/80">Enter your credentials to access your account</p>
+=======
+    <div className="min-h-screen py-15 px-4  bg-[var(--color-secondary)]">
+    <div className="max-w-md mx-auto">
+      <div className="text-center">
+        <h2 className="text-3xl font-bold text-dark mb-2">Login to your account</h2>
+        <p className="text-dark/80">Enter your credentials to access your account</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="mt-8 bg-[var(--color-bg)] p-8 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
+        <div className="space-y-6">
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-dark  border-light-gray">
+              Username
+            </label>
+            <div className="mt-1 relative rounded-md">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                
+              </div>
+              <input
+                type="text"
+                id="username"
+                placeholder="abc@uwu.ac.lk"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                className={`block w-full rounded-md pl-10 ${
+                  errors.username ? 'border-red-500' : 'border-[var(--color-secondary)]'
+                } px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-gold transition-all duration-200`}
+              />
+            </div>
+            {errors.username && (
+              <p className="mt-1 text-sm text-red-500">{errors.username}</p>
+            )}
+>>>>>>> origin/Hansamali
           </div>
 
           <form onSubmit={handleSubmit} className="mt-8 bg-[var(--color-bg)] p-8 rounded-lg shadow-md border border-light-gray transition-all duration-300 hover:shadow-lg">
