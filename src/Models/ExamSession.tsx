@@ -6,7 +6,7 @@ export interface ExamSession {
         startTime: string;
         endTime: string;
         subjectCode?: string;
-        degree?:string,
+        degreeId: number; // Changed from string to number to match database schema
         studentCount: number;
     }
 export class ExamSessionService {

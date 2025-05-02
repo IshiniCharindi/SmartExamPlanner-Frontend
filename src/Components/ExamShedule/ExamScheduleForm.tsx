@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import {ExamSession, ExamSessionService} from '../../Models/ExamSession';
+import React, { useState, useEffect } from 'react';
+import { ExamSession, ExamSessionService } from '../../Models/ExamSession';
+import { Department, DepartmentService } from '../../Models/Department';
 import toast from "react-hot-toast";
 import ToastCustom from "../Other/ToastCustom";
 
@@ -9,17 +10,36 @@ const ExamScheduleForm = () => {
         startTime: '',
         endTime: '',
         subjectCode: '',
-        studentCount: 0
+        studentCount: 0,
+        degreeId: 0 // Add degreeId to form data
     });
 
+    const [departments, setDepartments] = useState<Department[]>([]);
+    const [isDeptLoading, setIsDeptLoading] = useState(true);
     const [errors, setErrors] = useState<Partial<typeof formData>>({});
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    useEffect(() => {
+        const fetchDepartments = async () => {
+            try {
+                const depts = await DepartmentService.getAllDepartments();
+                setDepartments(depts);
+            } catch (error) {
+                console.error('Error fetching departments:', error);
+                toast.custom(<ToastCustom type='error' header='Error'>Failed to load departments</ToastCustom>);
+            } finally {
+                setIsDeptLoading(false);
+            }
+        };
+
+        fetchDepartments();
+    }, []);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: name === 'studentCount' ? parseInt(value) || 0 : value
+            [name]: name === 'studentCount' || name === 'degreeId' ? parseInt(value) || 0 : value
         }));
 
         if (errors[name as keyof typeof formData]) {
@@ -37,6 +57,7 @@ const ExamScheduleForm = () => {
         if (!formData.startTime) newErrors.startTime = 'Start time is required';
         if (!formData.endTime) newErrors.endTime = 'End time is required';
         if (formData.studentCount <= 0) newErrors.studentCount = 'Student count must be positive';
+        if (!formData.degreeId) newErrors.degreeId = 'Degree is required'; // Add validation for degree
 
         if (formData.startTime && formData.endTime && formData.startTime >= formData.endTime) {
             newErrors.endTime = 'End time must be after start time';
@@ -61,7 +82,8 @@ const ExamScheduleForm = () => {
                         startTime: '',
                         endTime: '',
                         subjectCode: '',
-                        studentCount: 0
+                        studentCount: 0,
+                        degreeId: 0
                     });
 
                     toast.custom(<ToastCustom type='success' header='Exam Session'>Exam session created successfully</ToastCustom>);
@@ -106,6 +128,36 @@ const ExamScheduleForm = () => {
                             />
                             {errors.examDate && (
                                 <p className="mt-1 text-sm text-red-600">{errors.examDate}</p>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Degree Dropdown */}
+                    <div>
+                        <label htmlFor="degreeId" className="block text-sm font-medium text-gray-700">
+                            Degree <span className="text-red-500">*</span>
+                        </label>
+                        <div className="mt-1">
+                            <select
+                                id="degreeId"
+                                name="degreeId"
+                                value={formData.degreeId || ''}
+                                onChange={handleChange}
+                                className={`block w-full rounded-md shadow-sm ${
+                                    errors.degreeId ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                } sm:text-sm`}
+                                required
+                                disabled={isDeptLoading}
+                            >
+                                <option value="">Select Degree</option>
+                                {departments.map(degree => (
+                                    <option key={degree.departmentId} value={degree.departmentId}>
+                                        {degree.name}
+                                    </option>
+                                ))}
+                            </select>
+                            {errors.degreeId && (
+                                <p className="mt-1 text-sm text-red-600">{errors.degreeId}</p>
                             )}
                         </div>
                     </div>
@@ -209,7 +261,7 @@ const ExamScheduleForm = () => {
                     </button>
                     <button
                         type="submit"
-                        disabled={isLoading}
+                        disabled={isLoading || isDeptLoading}
                         className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#edb83d] hover:bg-[#d9a637] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#edb83d] ${
                             isLoading ? 'opacity-75 cursor-not-allowed' : ''
                         }`}
