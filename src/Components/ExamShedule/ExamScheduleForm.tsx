@@ -11,7 +11,7 @@ const ExamScheduleForm = () => {
         endTime: '',
         subjectCode: '',
         studentCount: 0,
-        degreeId: 0
+        departmentId: 0
     });
 
     const [departments, setDepartments] = useState<Department[]>([]);
@@ -23,6 +23,7 @@ const ExamScheduleForm = () => {
         const fetchDepartments = async () => {
             try {
                 const depts = await DepartmentService.getAllDepartments();
+                console.log("depts",depts)
                 setDepartments(depts);
             } catch (error) {
                 console.error('Error fetching departments:', error);
@@ -37,9 +38,12 @@ const ExamScheduleForm = () => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
+
         setFormData(prev => ({
             ...prev,
-            [name]: name === 'studentCount' || name === 'degreeId' ? parseInt(value) || 0 : value
+            [name]: name === 'studentCount' || name === 'degreeId'
+                ? Number(value)  // Use Number instead of parseInt
+                : value
         }));
 
         if (errors[name as keyof typeof formData]) {
@@ -57,7 +61,7 @@ const ExamScheduleForm = () => {
         if (!formData.startTime) newErrors.startTime = 'Start time is required';
         if (!formData.endTime) newErrors.endTime = 'End time is required';
         if (formData.studentCount <= 0) newErrors.studentCount = 'Student count must be positive';
-        if (!formData.degreeId || formData.degreeId === 0) newErrors.degreeId = 'Department is required';
+        if (!formData.departmentId || formData.departmentId === 0) newErrors.departmentId = 'Department is required';
 
         if (formData.startTime && formData.endTime && formData.startTime >= formData.endTime) {
             newErrors.endTime = 'End time must be after start time';
@@ -75,7 +79,7 @@ const ExamScheduleForm = () => {
             try {
                 await new Promise(resolve => setTimeout(resolve, 1500));
                 const result = await ExamSessionService.addExamSession(formData);
-
+                console.log(result)
                 if(result){
                     setFormData({
                         examDate: '',
@@ -83,7 +87,7 @@ const ExamScheduleForm = () => {
                         endTime: '',
                         subjectCode: '',
                         studentCount: 0,
-                        degreeId: 0
+                        departmentId: 0
                     });
 
                     toast.custom(<ToastCustom type='success' header='Exam Session'>Exam session created successfully</ToastCustom>);
@@ -139,25 +143,25 @@ const ExamScheduleForm = () => {
                         </label>
                         <div className="mt-1">
                             <select
-                                id="degreeId"
-                                name="degreeId"
-                                value={formData.degreeId}
+                                id="departmentId"
+                                name="departmentId"
+                                value={formData.departmentId || ''}
                                 onChange={handleChange}
                                 className={`block w-full rounded-md shadow-sm ${
-                                    errors.degreeId ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                    errors.departmentId ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                                 } sm:text-sm`}
                                 required
                                 disabled={isDeptLoading}
                             >
-                                <option value={0}>Select Department</option>
+                                <option value="">Select Degree</option>
                                 {departments.map(dept => (
                                     <option key={dept.departmentId} value={dept.departmentId}>
                                         {dept.name}
                                     </option>
                                 ))}
                             </select>
-                            {errors.degreeId && (
-                                <p className="mt-1 text-sm text-red-600">{errors.degreeId}</p>
+                            {errors.departmentId && (
+                                <p className="mt-1 text-sm text-red-600">{errors.departmentId}</p>
                             )}
                         </div>
                     </div>

@@ -12,7 +12,7 @@ export class DepartmentService {
             const response = await getAllDepartmentsRequest();
 
             if (response.status === 200 && response.data.proceed) {
-                // console.log(response.data.content)
+                console.log("department",response.data.content)
                 return response.data.content;
             }
             return [];

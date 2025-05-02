@@ -6,13 +6,13 @@ export interface ExamSession {
         startTime: string;
         endTime: string;
         subjectCode?: string;
-        degreeId: number; // Changed from string to number to match database schema
+        departmentId: number; // Changed from string to number to match database schema
         studentCount: number;
-    }
+}
 export class ExamSessionService {
         static async addExamSession(examSession: ExamSession): Promise<boolean> {
                 const response = await addExamSessionRequest(examSession)
-                // console.log("Response",response)
+                console.log("Response",response)
                 if(response.status === 200 && response.data.proceed) {
                         return true;
                 }
