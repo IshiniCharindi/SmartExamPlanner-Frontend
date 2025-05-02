@@ -1,3 +1,7 @@
+import {loginAttemptRequest, protectedAccessRequest} from "../Services/userRequests.tsx"
+import { AppDispatch } from "../redux/store"
+import { setAdmin } from "../redux/admin-slice"
+
 export interface User {
     userId?: number;
     username?: string;
@@ -7,9 +11,6 @@ export interface User {
     phone?: string;
 }
 
-import { loginAttemptRequest } from "../Services/userRequests.tsx"
-import { AppDispatch } from "../redux/store"
-import { setAdmin } from "../redux/admin-slice"
 
 export class UserServices {
     static async loginAttempt(userCredentials: User, dispatch: AppDispatch): Promise<boolean> {
@@ -21,7 +22,14 @@ export class UserServices {
             // console.log(response.data.content.email , response.data.content.name)
             return true;
         }
+        return false;
+    }
 
+    static async protectedAccess(): Promise<boolean> {
+        const response = await protectedAccessRequest()
+        if(response.status === 200 && response.data.proceed) {
+            return true;
+        }
         return false;
     }
 }

@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { Menu, Plus, Users, UserCheck } from 'lucide-react';
 import Navbar from '../Navbar/navbar';
 import { useNavigate } from 'react-router-dom';
+import {useAuth} from "../Other/useAuth.tsx";
+import axios from "axios";
 
 
 const Dashboard = () => {
+  useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleAddSchedule = () => {
     navigate('/addSession'); // Adjust the route as needed
   };
+
+
   return (
     <div className="min-h-screen bg-[var(--color-secondary)]">
       {/* Navbar */}

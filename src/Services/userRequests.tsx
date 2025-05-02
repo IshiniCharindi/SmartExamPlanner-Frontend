@@ -5,7 +5,10 @@ const loginAttemptRequest = async (userCredentials: User) => {
     return domain.post('admin/loginAttempt', userCredentials, headers);
 }
 
+const protectedAccessRequest = async () => {
+    return domain.get('admin/protected');
+}
 
 export {
-    loginAttemptRequest,
+    loginAttemptRequest,protectedAccessRequest
 }
