@@ -9,6 +9,9 @@ const protectedAccessRequest = async () => {
     return domain.get('admin/protected');
 }
 
+const logoutRequest = async () => {
+    return domain.get('admin/logout');
+}
 export {
-    loginAttemptRequest,protectedAccessRequest
+    loginAttemptRequest,protectedAccessRequest,logoutRequest
 }

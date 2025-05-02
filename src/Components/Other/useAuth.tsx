@@ -12,8 +12,6 @@ export const useAuth = () => {
             const result = await UserServices.protectedAccess()
             if (!result) {
                 navigate('/login');
-            }else {
-                navigate('/admin')
             }
         }
         fetchProtectedAccess()

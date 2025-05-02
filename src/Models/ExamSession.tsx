@@ -50,4 +50,18 @@ export class ExamSessionService {
                         return false; // Return false if there's an error
                 }
         }
+        static async deleteSession(SessionId: String): Promise<boolean> {
+                try {
+                        const response = await deleteSession(sessionId);
+                        console.log("update response",response)
+                        if (response.status === 200 && response.data.proceed) {
+                                return true; // Return true if the update is successful
+                        } else {
+                                throw new Error('Failed to update session');
+                        }
+                } catch (error) {
+                        console.error('Error updating session:', error);
+                        return false; // Return false if there's an error
+                }
+        }
 }

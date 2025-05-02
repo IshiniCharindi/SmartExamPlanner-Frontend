@@ -66,7 +66,7 @@ const ExamScheduleTable = () => {
         if (window.confirm('Are you sure you want to delete this exam session?')) {
             setIsLoading(true);
             try {
-                const result = await ExamSessionService.deleteExamSession(sessionId);  // Delete session
+                const result = await ExamSessionService.deleteSession(sessionId);  // Delete session
                 if (result) {
                     setRefreshKey(prev => prev + 1);  // Refresh the table after deleting
                     toast.custom(<ToastCustom type="success" header="Success">Exam session deleted successfully</ToastCustom>);

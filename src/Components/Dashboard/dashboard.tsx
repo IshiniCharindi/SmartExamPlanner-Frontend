@@ -1,13 +1,12 @@
 import {useEffect, useState} from 'react';
 import { Menu, Plus, Users, UserCheck } from 'lucide-react';
 import Navbar from '../Navbar/navbar';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {useAuth} from "../Other/useAuth.tsx";
 import axios from "axios";
 
 
 const Dashboard = () => {
-  useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -26,7 +25,7 @@ const Dashboard = () => {
         {/* Header */}
         <header className="bg-[var(--color-dark)] shadow-lg">
           <div className="px-4 py-3 flex items-center">
-            <button onClick={() => setIsSidebarOpen(true)} className="text-white">
+            <button onClick={() => setIsSidebarOpen(true)} className="hover:cursor-pointer text-white">
               <Menu size={24} />
             </button>
             <h1 className="ml-4 text-xl font-bold text-white">Admin Dashboard</h1>
@@ -66,9 +65,12 @@ const Dashboard = () => {
                 </button>
               </div>
               <p className="text-dark/80 mb-4">Manage lecturer information and assignments</p>
-              <button className="w-full bg-[var(--color-light)] text-white py-2 px-4 rounded hover:bg-gold/90 transition-colors duration-200">
-                Manage Lecturers
-              </button>
+              <Link to="/lecturer">
+                <button className="hover:cursor-pointer w-full bg-[var(--color-light)] text-white py-2 px-4 rounded hover:bg-gold/90 transition-colors duration-200">
+                  Manage Lecturers
+                </button>
+              </Link>
+
             </div>
 
             {/* Supervisor Allocation Card */}

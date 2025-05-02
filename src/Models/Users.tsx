@@ -1,4 +1,4 @@
-import {loginAttemptRequest, protectedAccessRequest} from "../Services/userRequests.tsx"
+import {loginAttemptRequest, logoutRequest, protectedAccessRequest} from "../Services/userRequests.tsx"
 import { AppDispatch } from "../redux/store"
 import { setAdmin } from "../redux/admin-slice"
 
@@ -27,6 +27,14 @@ export class UserServices {
 
     static async protectedAccess(): Promise<boolean> {
         const response = await protectedAccessRequest()
+        if(response.status === 200 && response.data.proceed) {
+            return true;
+        }
+        return false;
+    }
+
+    static async logout(): Promise<boolean> {
+        const response = await logoutRequest()
         if(response.status === 200 && response.data.proceed) {
             return true;
         }

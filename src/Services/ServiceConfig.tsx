@@ -41,7 +41,7 @@ domain.interceptors.response.use(
     },
 
     error => {
-        console.error(error)
+        // console.error(error)
         return error.response
     }
 )

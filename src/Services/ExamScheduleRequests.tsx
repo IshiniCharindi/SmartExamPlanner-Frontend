@@ -15,9 +15,13 @@ const updateSession = async (examDetails: ExamSession) => {
     return domain.put('examSession/updateSession',examDetails, headers);
 }
 
+const deleteSession = async (sessionId: String) => {
+    return domain.delete(`examSession/deleteSession/${sessionId}`, headers);
+}
 
 export {
     addExamSessionRequest,
     getAllExamSessions,
-    updateSession
+    updateSession,
+    deleteSession
 }
