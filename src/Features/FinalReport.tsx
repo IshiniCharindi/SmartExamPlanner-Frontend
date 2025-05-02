@@ -26,7 +26,8 @@ const FinalReport = () => {
                     ExamSessionService.getAllExamSessions(),
                     ExamHallService.getAllExamHalls()
                 ]);
-
+                console.log("Halls", halls);
+                console.log("session", sessions);
                 if (sessions) {
                     setExamSessions(sessions);
                 } else {
@@ -79,11 +80,25 @@ const FinalReport = () => {
         }
     };
 
-    // Assign venues based on available halls
+    // Efficiently assign venues based on available halls and student count
     const getVenueAssignments = (): VenueAssignment => {
         const assignments: VenueAssignment = {};
-        examSessions.forEach((session, i) => {
-            assignments[session.sessionId || i] = examHalls[i]?.hallName || `Venue ${i + 1}`;
+        const hallsSorted = [...examHalls].sort((a, b) => a.maxCapacity - b.maxCapacity); // Sort halls by capacity (ascending)
+        const sessionsSorted = [...examSessions].sort((a, b) => a.studentCount - b.studentCount); // Sort sessions by student count (ascending)
+        const usedHalls = new Set<number>();
+
+        sessionsSorted.forEach(session => {
+            // Find a hall with sufficient capacity for the session
+            const suitableHall = hallsSorted.find(hall =>
+                hall.maxCapacity >= session.studentCount && !usedHalls.has(hall.hallId)
+            );
+
+            if (suitableHall) {
+                assignments[session.sessionId] = suitableHall.hallName;
+                usedHalls.add(suitableHall.hallId);
+            } else {
+                assignments[session.sessionId] = 'No suitable hall';
+            }
         });
         return assignments;
     };
@@ -142,10 +157,10 @@ const FinalReport = () => {
                 <tbody>
                 {examSessions.map((session, i) => {
                     const staff = staffAllocations[i] || { supervisors: [], invigilators: [] };
-                    const venue = venueAssignments[session.sessionId || i] || 'N/A';
+                    const venue = venueAssignments[session.sessionId] || 'N/A';
 
                     return (
-                        <tr key={session.sessionId || i} className="hover:bg-gray-50">
+                        <tr key={session.sessionId} className="hover:bg-gray-50">
                             <td className="border px-3 py-2">{formatDate(session.examDate)}</td>
                             <td className="border px-3 py-2">{getDayName(session.examDate)}</td>
                             <td className="border px-3 py-2">
