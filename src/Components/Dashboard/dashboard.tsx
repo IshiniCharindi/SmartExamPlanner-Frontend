@@ -76,15 +76,17 @@ const Dashboard = () => {
             {/* Supervisor Allocation Card */}
             <div className="bg-white p-6 rounded-lg shadow-md  hover:shadow-lg transition-all duration-300">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-dark">Supervisor Allocation</h2>
+                <h2 className="text-xl font-semibold text-dark">Generate Final Report</h2>
                 <button className="p-2 text-[var(--color-light)] hover:bg-gold/10 rounded-full">
                   <UserCheck size={24} />
                 </button>
               </div>
               <p className="text-dark/80 mb-4">Assign supervisors and invigilators to sessions</p>
+              <Link to="/report">
               <button className="w-full bg-[var(--color-light)] text-white py-2 px-4 rounded hover:bg-gold/90 transition-colors duration-200">
-                Allocate Staff
+                Generate Report
               </button>
+              </Link>
             </div>
           </div>
         </div>

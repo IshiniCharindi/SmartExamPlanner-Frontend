@@ -9,6 +9,7 @@ import {Toaster} from "react-hot-toast";
 import {useAuth} from "./Components/Other/useAuth.tsx";
 import AuthWrapper from "./Components/Other/AuthWrapper.tsx";
 import AddingLecture from "./Features/AddingLecture.tsx";
+import FinalReport from "./Features/FinalReport.tsx";
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
                     <Route element={<AddingExamSession/>} path='/addSession'/>
                     <Route element={<Dashboard/>} path='/admin'/>
                     <Route element={<AddingLecture/>} path='/lecturer'/>
+                    <Route element={<FinalReport/>} path='/report'/>
                 </Routes>
             </BrowserRouter>
         </>
