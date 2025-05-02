@@ -1,4 +1,4 @@
-import {addExamSessionRequest,getAllExamSessions,updateSession} from "../Services/ExamScheduleRequests.tsx";
+import {addExamSessionRequest,getAllExamSessions,updateSession,deleteSession} from "../Services/ExamScheduleRequests.tsx";
 
 export interface ExamSession {
         sessionId?: number;
@@ -50,7 +50,7 @@ export class ExamSessionService {
                         return false; // Return false if there's an error
                 }
         }
-        static async deleteSession(SessionId: String): Promise<boolean> {
+        static async deleteSession(sessionId: String): Promise<boolean> {
                 try {
                         const response = await deleteSession(sessionId);
                         console.log("update response",response)
