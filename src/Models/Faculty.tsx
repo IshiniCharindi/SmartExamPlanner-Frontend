@@ -1,4 +1,4 @@
-import {getAllFacultiesRequest} from "../Services/LectureRequests.tsx";
+import {getAllFacultiesRequest} from "../Services/FacultyRequests.tsx";
 
 export interface Faculty {
     facultyId: number;

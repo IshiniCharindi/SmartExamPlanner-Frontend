@@ -6,7 +6,7 @@ import ToastCustom from "../Other/ToastCustom";
 interface EditModalProps {
     isOpen: boolean;
     lecturerData: any;
-    departments: any[];
+    faculties: any[];  // Changed from departments to faculties
     onClose: () => void;
     onSave: (updatedData: any) => Promise<void>;
 }
@@ -14,19 +14,18 @@ interface EditModalProps {
 const EditModal: React.FC<EditModalProps> = ({
                                                  isOpen,
                                                  lecturerData,
-                                                 departments,
+                                                 faculties,  // Changed from departments to faculties
                                                  onClose,
                                                  onSave
                                              }) => {
     const [formData, setFormData] = useState<any>({
-        lecturerId:null,
+        lecturerId: null,
         name: '',
         availability: true,
-        departmentId: 0,
         rank: '',
         email: '',
         phone: '',
-        facultyId:null
+        facultyId: null  // Changed from departmentId to facultyId
     });
     const [errors, setErrors] = useState<Partial<typeof formData>>({});
     const [isSaving, setIsSaving] = useState(false);
@@ -34,14 +33,13 @@ const EditModal: React.FC<EditModalProps> = ({
     useEffect(() => {
         if (lecturerData) {
             setFormData({
-                lecturerId:lecturerData.lecturerId,
+                lecturerId: lecturerData.lecturerId,
                 name: lecturerData.name || '',
                 availability: lecturerData.availability !== false,
-                departmentId: lecturerData.departmentId || 0,
                 rank: lecturerData.rank || '',
                 email: lecturerData.email || '',
                 phone: lecturerData.phone || '',
-                facultyId:lecturerData.facultyId
+                facultyId: lecturerData.facultyId  // Changed from departmentId to facultyId
             });
         }
     }, [lecturerData]);
@@ -65,7 +63,7 @@ const EditModal: React.FC<EditModalProps> = ({
         const newErrors: Partial<typeof formData> = {};
 
         if (!formData.name.trim()) newErrors.name = 'Name is required';
-        if (!formData.departmentId) newErrors.departmentId = 'Department is required';
+        if (!formData.facultyId) newErrors.facultyId = 'Faculty is required';  // Changed from departmentId to facultyId
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -134,30 +132,30 @@ const EditModal: React.FC<EditModalProps> = ({
                                 )}
                             </div>
 
-                            {/* Department */}
+                            {/* Faculty (changed from Department) */}
                             <div>
-                                <label htmlFor="departmentId" className="block text-sm font-medium text-[var(--color-dark)] mb-1">
-                                    Department <span className="text-red-500">*</span>
+                                <label htmlFor="facultyId" className="block text-sm font-medium text-[var(--color-dark)] mb-1">
+                                    Faculty <span className="text-red-500">*</span>
                                 </label>
                                 <select
-                                    id="departmentId"
-                                    name="departmentId"
-                                    value={formData.departmentId || ''}
+                                    id="facultyId"
+                                    name="facultyId"
+                                    value={formData.facultyId || ''}
                                     onChange={handleChange}
                                     className={`w-full px-4 py-2 border ${
-                                        errors.departmentId ? 'border-red-500' : 'border-[var(--color-secondary)]'
+                                        errors.facultyId ? 'border-red-500' : 'border-[var(--color-secondary)]'
                                     } rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]`}
                                     required
                                 >
-                                    <option value="">Select Department</option>
-                                    {departments.map(dept => (
-                                        <option key={dept.departmentId} value={dept.departmentId}>
-                                            {dept.name}
+                                    <option value="">Select Faculty</option>
+                                    {faculties.map(faculty => (
+                                        <option key={faculty.facultyId} value={faculty.facultyId}>
+                                            {faculty.name}
                                         </option>
                                     ))}
                                 </select>
-                                {errors.departmentId && (
-                                    <p className="mt-1 text-sm text-red-500">{errors.departmentId}</p>
+                                {errors.facultyId && (
+                                    <p className="mt-1 text-sm text-red-500">{errors.facultyId}</p>
                                 )}
                             </div>
 

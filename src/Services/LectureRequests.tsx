@@ -26,17 +26,10 @@ const deleteLecturerRequest = async (lecturerId: number) => {
 }
 
 
-
-// Faculty endpoints
-const getAllFacultiesRequest = async () => {
-    return domain.get('faculty/all', headers);
-}
-
 export {
     getAllLecturersRequest,
     addLecturerRequest,
     updateLecturerRequest,
     updateLecturerAvailabilityRequest,
     deleteLecturerRequest,
-    getAllFacultiesRequest
 }

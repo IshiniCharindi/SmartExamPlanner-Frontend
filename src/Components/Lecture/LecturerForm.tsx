@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { LecturerService } from '../../Models/Lecturer';
-import { Department, DepartmentService } from '../../Models/Department.tsx';
 import { Faculty, FacultyService } from '../../Models/Faculty';
 import toast from "react-hot-toast";
 import ToastCustom from "../Other/ToastCustom";
@@ -10,35 +9,31 @@ const LecturerForm = () => {
     const [formData, setFormData] = useState({
         name: '',
         availability: true,
-        departmentId: 0,
+        facultyId: 0,
         rank: '',
         email: '',
         phone: '',
-        facultyId: '',
     });
 
-    const [departments, setDepartments] = useState<Department[]>([]);
     const [faculties, setFaculties] = useState<Faculty[]>([]);
     const [errors, setErrors] = useState<Partial<typeof formData>>({});
     const [isLoading, setIsLoading] = useState(false);
-    const [isDeptLoading, setIsDeptLoading] = useState(true);
+    const [isFacultyLoading, setIsFacultyLoading] = useState(true);
 
     useEffect(() => {
-        const fetchDepartments = async () => {
+        const fetchFaculties = async () => {
             try {
-                const depts = await DepartmentService.getAllDepartments();
-                console.log(depts)
-                setDepartments(depts);
-
+                const facs = await FacultyService.getAllFaculties()
+                setFaculties(facs);
             } catch (error) {
-                console.error('Error fetching departments:', error);
-                toast.custom(<ToastCustom type='error' header='Error'>Failed to load departments</ToastCustom>);
+                console.error('Error fetching faculties:', error);
+                toast.custom(<ToastCustom type='error' header='Error'>Failed to load faculties</ToastCustom>);
             } finally {
-                setIsDeptLoading(false);
+                setIsFacultyLoading(false);
             }
         };
 
-        fetchDepartments();
+        fetchFaculties();
     }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -60,7 +55,7 @@ const LecturerForm = () => {
         const newErrors: Partial<typeof formData> = {};
 
         if (!formData.name.trim()) newErrors.name = 'Name is required';
-        if (!formData.departmentId) newErrors.departmentId = 'Department is required';
+        if (!formData.facultyId) newErrors.facultyId = 'Faculty is required';
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -72,38 +67,25 @@ const LecturerForm = () => {
         if (validateForm()) {
             setIsLoading(true);
             try {
-                // Get facultyId from selected department
-                const selectedFaculty = departments.find(d => d.departmentId === Number(formData.departmentId));
-
-                console.log(formData.availability)
-                if (!selectedFaculty) {
-                    toast.custom(<ToastCustom type='error' header='Error'>Please select a valid department</ToastCustom>);
-                    return;
-                }
-
                 const lecturerData = {
                     name: formData.name,
-                    departmentId: formData.departmentId,
-                    facultyId: selectedFaculty?.facultyId,
+                    facultyId: formData.facultyId,
                     rank: formData.rank,
                     email: formData.email,
                     phone: formData.phone,
                     availability: formData.availability
                 };
-                console.log("deoartmentId " , formData.departmentId)
-                console.log(lecturerData)
+
                 const result = await LecturerService.addLecturer(lecturerData);
 
-                console.log(result)
                 if(result){
                     setFormData({
                         name: '',
                         availability: true,
-                        departmentId:0,
+                        facultyId: 0,
                         rank: '',
                         email: '',
                         phone: '',
-                        facultyId: '',
                     });
 
                     toast.custom(<ToastCustom type='success' header='Lecturer'>Lecturer added successfully</ToastCustom>);
@@ -149,31 +131,31 @@ const LecturerForm = () => {
                             )}
                         </div>
 
-                        {/* Department */}
+                        {/* Faculty */}
                         <div>
-                            <label htmlFor="departmentId" className="block text-sm font-medium text-[var(--color-dark)] mb-1">
-                                Degree <span className="text-red-500">*</span>
+                            <label htmlFor="facultyId" className="block text-sm font-medium text-[var(--color-dark)] mb-1">
+                                Faculty <span className="text-red-500">*</span>
                             </label>
                             <select
-                                id="departmentId"
-                                name="departmentId"
-                                value={formData.departmentId || ''}
+                                id="facultyId"
+                                name="facultyId"
+                                value={formData.facultyId || ''}
                                 onChange={handleChange}
                                 className={`w-full px-4 py-2 border ${
-                                errors.departmentId ? 'border-red-500' : 'border-[var(--color-secondary)]'
-                            } rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]`}
+                                    errors.facultyId ? 'border-red-500' : 'border-[var(--color-secondary)]'
+                                } rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]`}
                                 required
-                                disabled={isDeptLoading}
-                                >
-                                <option value="">Select Degree</option>
-                                {departments.map(dept => (
-                                    <option key={dept.departmentId} value={dept.departmentId}>
-                                        {dept.name}
+                                disabled={isFacultyLoading}
+                            >
+                                <option value="">Select Faculty</option>
+                                {faculties.map(faculty => (
+                                    <option key={faculty.facultyId} value={faculty.facultyId}>
+                                        {faculty.name}
                                     </option>
                                 ))}
                             </select>
-                            {errors.departmentId && (
-                                <p className="mt-1 text-sm text-red-500">{errors.departmentId}</p>
+                            {errors.facultyId && (
+                                <p className="mt-1 text-sm text-red-500">{errors.facultyId}</p>
                             )}
                         </div>
 
@@ -226,7 +208,7 @@ const LecturerForm = () => {
                         </div>
 
                         {/* Availability Toggle */}
-                        <div >
+                        <div>
                             <label className="block text-sm font-medium text-[var(--color-dark)] mb-1">
                                 Availability
                             </label>
@@ -264,7 +246,7 @@ const LecturerForm = () => {
                         </button>
                         <button
                             type="submit"
-                            disabled={isLoading || isDeptLoading}
+                            disabled={isLoading || isFacultyLoading}
                             className={`px-6 py-2 bg-[var(--color-primary)] rounded-md text-white hover:bg-[var(--color-light)] transition-colors ${
                                 isLoading ? 'opacity-75 cursor-not-allowed' : ''
                             }`}

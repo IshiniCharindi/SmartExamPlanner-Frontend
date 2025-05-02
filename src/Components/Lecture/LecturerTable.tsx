@@ -19,10 +19,9 @@ const LecturerTable = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [lects, depts, facs] = await Promise.all([
+                const [lects, facs] = await Promise.all([
                     LecturerService.getAllLecturers(),
-                    DepartmentService.getAllDepartments(),
-                    // FacultyService.getAllFaculties()
+                    FacultyService.getAllFaculties()
                 ]);
 
                 // Transform lecturer data to match expected structure
@@ -33,8 +32,7 @@ const LecturerTable = () => {
                 }));
 
                 setLecturers(transformedLecturers);
-                setDepartments(depts);
-                // setFaculties(facs);
+                setFaculties(facs);
             } catch (error) {
                 console.error('Error fetching data:', error);
                 toast.custom(<ToastCustom type="error" header="Error">Failed to load data</ToastCustom>);
@@ -47,6 +45,7 @@ const LecturerTable = () => {
     }, [refreshKey]);
 
     const handleEdit = (lecturerId: number) => {
+
         const lecturerToEdit = lecturers.find(l => l.lecturerId === lecturerId);
         if (lecturerToEdit) {
             setSelectedLecturer(lecturerToEdit);
@@ -106,7 +105,7 @@ const LecturerTable = () => {
 
             const result = await LecturerService.updateLecturerAvailability(
                 lecturerId,
-                updatedAvailability
+                updatedAvailability// convert back to string if API expects it
             );
 
             if (result) {
@@ -121,9 +120,11 @@ const LecturerTable = () => {
         }
     };
 
-    const getDepartmentName = (departmentId: number) => {
-        const dept = departments.find(d => d.departmentId === departmentId);
-        return dept ? dept.name : 'Unknown';
+
+
+    const getFacultyName = (facultyId: number) => {
+        const fac = faculties.find(f => f.facultyId === facultyId);
+        return fac ? fac.name : 'Unknown';
     };
 
     return (
@@ -140,7 +141,6 @@ const LecturerTable = () => {
                             <thead className="bg-gray-50">
                             <tr>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Faculty</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Designation</th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Availability</th>
@@ -162,16 +162,15 @@ const LecturerTable = () => {
                                 </tr>
                             ) : (
                                 lecturers.map((lecturer) => (
+
                                     <tr key={lecturer.lecturerId}>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="font-medium text-gray-900">{lecturer.name}</div>
                                             <div className="text-sm text-gray-500">{lecturer.email}</div>
                                         </td>
+
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            {getDepartmentName(lecturer.departmentId)}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            {lecturer.facultyName}
+                                            {getFacultyName(lecturer.facultyId)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             {lecturer.rank && <div className="text-sm text-gray-500">{lecturer.rank}</div>}
@@ -182,7 +181,7 @@ const LecturerTable = () => {
                                                     Not Available
                                                 </span>
                                                 <Switch
-                                                    checked={lecturer.availability}
+                                                    checked ={lecturer.availability}
                                                     onChange={() => toggleAvailability(lecturer.lecturerId!)}
                                                     className={`${
                                                         lecturer.availability ? 'bg-[var(--color-primary)]' : 'bg-gray-200'
@@ -222,10 +221,11 @@ const LecturerTable = () => {
                 </div>
             </div>
 
+            {/* Edit Modal */}
             <EditModal
                 isOpen={isModalOpen}
                 lecturerData={selectedLecturer}
-                departments={departments}
+                faculties={faculties}
                 onClose={() => setIsModalOpen(false)}
                 onSave={handleSave}
             />
