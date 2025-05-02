@@ -152,7 +152,7 @@ const LecturerForm = () => {
                         {/* Department */}
                         <div>
                             <label htmlFor="departmentId" className="block text-sm font-medium text-[var(--color-dark)] mb-1">
-                                Department <span className="text-red-500">*</span>
+                                Degree <span className="text-red-500">*</span>
                             </label>
                             <select
                                 id="departmentId"
@@ -165,7 +165,7 @@ const LecturerForm = () => {
                                 required
                                 disabled={isDeptLoading}
                                 >
-                                <option value="">Select Department</option>
+                                <option value="">Select Degree</option>
                                 {departments.map(dept => (
                                     <option key={dept.departmentId} value={dept.departmentId}>
                                         {dept.name}
