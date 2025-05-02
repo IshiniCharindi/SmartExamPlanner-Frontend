@@ -1,4 +1,4 @@
-import {addExamSessionRequest,getAllExamSessions} from "../Services/ExamScheduleRequests.tsx";
+import {addExamSessionRequest,getAllExamSessions,updateSession} from "../Services/ExamScheduleRequests.tsx";
 
 export interface ExamSession {
         sessionId?: number;
@@ -33,6 +33,21 @@ export class ExamSessionService {
                 } catch (error) {
                         console.error('Error fetching exam sessions:', error);
                         return null; // Return null in case of error
+                }
+        }
+
+        static async updateSession(updatedSession: ExamSession): Promise<boolean> {
+                try {
+                        const response = await updateSession(updatedSession);
+                        console.log("update response",response)
+                        if (response.status === 200 && response.data.proceed) {
+                                return true; // Return true if the update is successful
+                        } else {
+                                throw new Error('Failed to update session');
+                        }
+                } catch (error) {
+                        console.error('Error updating session:', error);
+                        return false; // Return false if there's an error
                 }
         }
 }

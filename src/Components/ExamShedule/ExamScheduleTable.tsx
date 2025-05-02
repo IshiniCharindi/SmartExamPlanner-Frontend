@@ -3,16 +3,19 @@ import { ExamSessionService } from '../../Models/ExamSession';
 import { ExamSession } from '../../Models/ExamSession';
 import toast from 'react-hot-toast';
 import ToastCustom from "../Other/ToastCustom";
+import EditModal from './EditModal'; // Import the EditModal component
 
 const ExamScheduleTable = () => {
     const [examSessions, setExamSessions] = useState<ExamSession[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [refreshKey, setRefreshKey] = useState(0);
+    const [isModalOpen, setIsModalOpen] = useState(false);  // Modal visibility
+    const [selectedSession, setSelectedSession] = useState<ExamSession | null>(null);  // Selected session for editing
 
     const fetchExamSessions = async () => {
         try {
             const result = await ExamSessionService.getAllExamSessions();
-
+            console.log("All Sessions",result)
             if (Array.isArray(result)) {
                 setExamSessions(result);
             } else {
@@ -34,7 +37,17 @@ const ExamScheduleTable = () => {
     }, [refreshKey]);
 
     const handleEdit = (sessionId: string) => {
-        console.log('Editing session with ID:', sessionId);
+        const sessionToEdit = examSessions.find(session => session.sessionId === sessionId);
+        if (sessionToEdit) {
+            setSelectedSession(sessionToEdit);
+            setIsModalOpen(true);  // Open the modal when "Edit" is clicked
+        }
+    };
+
+    const handleSave = (updatedSession: ExamSession) => {
+        // Here, you can make an API call to update the session data
+        console.log('Updated session:', updatedSession);
+        setIsModalOpen(false);  // Close the modal after saving
     };
 
     const handleDelete = async (sessionId: string) => {
@@ -68,78 +81,50 @@ const ExamScheduleTable = () => {
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                             <tr>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Exam Date
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Subject Code
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Time
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Students
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Actions
-                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Exam Date</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject Code</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Students</th>
+                                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
                             {isLoading ? (
                                 <tr>
                                     <td colSpan={5} className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
-                                        <div className="flex justify-center items-center">
-                                            <svg className="animate-spin h-5 w-5 mr-3 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                            </svg>
-                                            Loading sessions...
-                                        </div>
+                                        Loading sessions...
                                     </td>
                                 </tr>
                             ) : examSessions.length === 0 ? (
                                 <tr>
                                     <td colSpan={5} className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
-                                        No exam sessions found. Create one to get started.
+                                        No exam sessions found.
                                     </td>
                                 </tr>
                             ) : (
                                 examSessions.map((session) => (
-                                    <tr key={session.sessionId} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            {new Date(session.examDate).toLocaleDateString()}
+                                    <tr key={session.sessionId}>
+                                        <td className="px-6 py-4">{new Date(session.examDate).toLocaleDateString()}</td>
+                                        <td className="px-6 py-4">{session.subjectCode || '-'}</td>
+                                        <td className="px-6 py-4">
+                                            <span>{session.startTime} - {session.endTime}</span>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {session.subjectCode || '-'}
+                                        <td className="px-6 py-4">
+                                            {session.studentCount} students
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <div className="flex items-center">
-                                                <span className="font-medium">{session.startTime}</span>
-                                                <span className="mx-1">-</span>
-                                                <span className="font-medium">{session.endTime}</span>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                    {session.studentCount} students
-                                                </span>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <div className="flex justify-end space-x-2">
-                                                <button
-                                                    onClick={() => handleEdit(session.sessionId)}
-                                                    className="text-blue-600 hover:text-blue-900"
-                                                >
-                                                    Edit
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDelete(session.sessionId)}
-                                                    className="text-red-600 hover:text-red-900"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </div>
+                                        <td className="px-6 py-4 text-right">
+                                            <button
+                                                onClick={() => handleEdit(session.sessionId)}
+                                                className="text-blue-600 hover:text-blue-900"
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(session.sessionId)}
+                                                className="text-red-600 hover:text-red-900"
+                                            >
+                                                Delete
+                                            </button>
                                         </td>
                                     </tr>
                                 ))
@@ -149,6 +134,14 @@ const ExamScheduleTable = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Edit Modal */}
+            <EditModal
+                isOpen={isModalOpen}
+                sessionData={selectedSession || {}}
+                onClose={() => setIsModalOpen(false)}
+                onSave={handleSave}
+            />
         </div>
     );
 };

@@ -11,8 +11,13 @@ const getAllExamSessions = async () => {
     return domain.get('examSession/getAllSession',headers);
 }
 
+const updateSession = async (examDetails: ExamSession) => {
+    return domain.put('examSession/updateSession',examDetails, headers);
+}
+
 
 export {
     addExamSessionRequest,
-    getAllExamSessions
+    getAllExamSessions,
+    updateSession
 }
