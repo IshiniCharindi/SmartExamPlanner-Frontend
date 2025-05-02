@@ -29,7 +29,7 @@ const LecturerTable = () => {
                 const transformedLecturers = lects.map(lecturer => ({
                     ...lecturer,
                     name: lecturer.name,
-                    availability: lecturer.availability
+                    availability: lecturer.availability === 'true'
                 }));
 
                 setLecturers(transformedLecturers);
@@ -47,7 +47,6 @@ const LecturerTable = () => {
     }, [refreshKey]);
 
     const handleEdit = (lecturerId: number) => {
-
         const lecturerToEdit = lecturers.find(l => l.lecturerId === lecturerId);
         if (lecturerToEdit) {
             setSelectedLecturer(lecturerToEdit);
@@ -107,7 +106,7 @@ const LecturerTable = () => {
 
             const result = await LecturerService.updateLecturerAvailability(
                 lecturerId,
-                updatedAvailability// convert back to string if API expects it
+                updatedAvailability
             );
 
             if (result) {
@@ -126,11 +125,6 @@ const LecturerTable = () => {
         const dept = departments.find(d => d.departmentId === departmentId);
         return dept ? dept.name : 'Unknown';
     };
-
-    // const getFacultyName = (facultyId: number) => {
-    //     const fac = faculties.find(f => f.facultyId === facultyId);
-    //     return fac ? fac.facultyName : 'Unknown';
-    // };
 
     return (
         <div>
@@ -168,7 +162,6 @@ const LecturerTable = () => {
                                 </tr>
                             ) : (
                                 lecturers.map((lecturer) => (
-
                                     <tr key={lecturer.lecturerId}>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="font-medium text-gray-900">{lecturer.name}</div>
@@ -189,10 +182,10 @@ const LecturerTable = () => {
                                                     Not Available
                                                 </span>
                                                 <Switch
-                                                    checked ={lecturer.availability}
+                                                    checked={lecturer.availability}
                                                     onChange={() => toggleAvailability(lecturer.lecturerId!)}
                                                     className={`${
-                                                       lecturer.availability ? 'bg-[var(--color-primary)]' : 'bg-gray-200'
+                                                        lecturer.availability ? 'bg-[var(--color-primary)]' : 'bg-gray-200'
                                                     } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
                                                 >
                                                     <span
@@ -229,7 +222,6 @@ const LecturerTable = () => {
                 </div>
             </div>
 
-            {/* Edit Modal */}
             <EditModal
                 isOpen={isModalOpen}
                 lecturerData={selectedLecturer}
