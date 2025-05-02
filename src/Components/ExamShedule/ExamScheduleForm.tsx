@@ -58,7 +58,7 @@ const ExamScheduleForm = () => {
                 await new Promise(resolve => setTimeout(resolve, 1500));
                 console.log('Form submitted:', formData);
                 const result = await ExamSessionService.addExamSession(formData);
-                console.log("Result",result)
+                // console.log("Result",result)
                 if(result){
                     setFormData({
                         examDate: '',
