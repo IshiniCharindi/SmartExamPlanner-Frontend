@@ -4,18 +4,15 @@ import {
     updateLecturerRequest,
     updateLecturerAvailabilityRequest,
     deleteLecturerRequest,
-    getAllDepartmentsRequest,
-    getAllFacultiesRequest
 } from "../Services/LectureRequests";
 
 export interface Lecturer{
-    lecturerId: number;
+    lecturerId?: number;
     name: string;
-    designation: string;
     departmentId: number;
     rank: string;
     facultyId: number;
-    availability: Record<string, boolean>;
+    availability: boolean;
     email: string;
     phone: string;
 }
@@ -24,6 +21,7 @@ export class LecturerService {
     static async getAllLecturers(): Promise<Lecturer[]> {
         try {
             const response = await getAllLecturersRequest();
+            console.log(response)
             if (response.status === 200 && response.data.proceed) {
                 return response.data.content;
             }
@@ -34,12 +32,11 @@ export class LecturerService {
         }
     }
 
-    static async addLecturer(lecturerData: Omit<Lecturer, 'lecturerId'>): Promise<Lecturer | null> {
-        console.log(lecturerData)
+    static async addLecturer(lecturerData: Lecturer): Promise<Lecturer | null> {
         try {
             const response = await addLecturerRequest(lecturerData);
             if (response.status === 200 && response.data.proceed) {
-                return response.data.content;
+                return response.data.proceed;
             }
             return null;
         } catch (error) {

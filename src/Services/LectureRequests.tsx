@@ -7,7 +7,8 @@ const getAllLecturersRequest = async () => {
     return domain.get('lecturer/all', headers);
 }
 
-const addLecturerRequest = async (lecturerData: Omit<Lecturer, 'lecturerId'>) => {
+const addLecturerRequest = async (lecturerData:Lecturer) => {
+    console.log(lecturerData)
     return domain.post('lecturer/add', lecturerData, headers);
 }
 
@@ -23,10 +24,7 @@ const deleteLecturerRequest = async (lecturerId: number) => {
     return domain.delete(`lecturer/delete/${lecturerId}`, headers);
 }
 
-// Department endpoints
-const getAllDepartmentsRequest = async () => {
-    return domain.get('department/all', headers);
-}
+
 
 // Faculty endpoints
 const getAllFacultiesRequest = async () => {
@@ -39,6 +37,5 @@ export {
     updateLecturerRequest,
     updateLecturerAvailabilityRequest,
     deleteLecturerRequest,
-    getAllDepartmentsRequest,
     getAllFacultiesRequest
 }

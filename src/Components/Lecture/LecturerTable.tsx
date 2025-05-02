@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import {Lecturer, LecturerService} from '../../Models/Lecturer';
-import {Department, DepartmentService} from '../../Models/Department';
-import {Faculty, FacultyService} from '../../Models/Faculty';
+import { Lecturer, LecturerService } from '../../Models/Lecturer';
+import { Department, DepartmentService } from '../../Models/Department';
+import { Faculty, FacultyService } from '../../Models/Faculty';
 import toast from 'react-hot-toast';
 import ToastCustom from "../Other/ToastCustom";
 import EditModal from './EditModal.tsx';
+import { Switch } from '@headlessui/react';
 
 const LecturerTable = () => {
     const [lecturers, setLecturers] = useState<Lecturer[]>([]);
@@ -21,12 +22,19 @@ const LecturerTable = () => {
                 const [lects, depts, facs] = await Promise.all([
                     LecturerService.getAllLecturers(),
                     DepartmentService.getAllDepartments(),
-                    FacultyService.getAllFaculties()
+                    // FacultyService.getAllFaculties()
                 ]);
 
-                setLecturers(lects);
+                // Transform lecturer data to match expected structure
+                const transformedLecturers = lects.map(lecturer => ({
+                    ...lecturer,
+                    name: lecturer.name,
+                    availability: lecturer.availability
+                }));
+
+                setLecturers(transformedLecturers);
                 setDepartments(depts);
-                setFaculties(facs);
+                // setFaculties(facs);
             } catch (error) {
                 console.error('Error fetching data:', error);
                 toast.custom(<ToastCustom type="error" header="Error">Failed to load data</ToastCustom>);
@@ -39,6 +47,7 @@ const LecturerTable = () => {
     }, [refreshKey]);
 
     const handleEdit = (lecturerId: number) => {
+
         const lecturerToEdit = lecturers.find(l => l.lecturerId === lecturerId);
         if (lecturerToEdit) {
             setSelectedLecturer(lecturerToEdit);
@@ -49,7 +58,14 @@ const LecturerTable = () => {
     const handleSave = async (updatedLecturer: Lecturer) => {
         setIsLoading(true);
         try {
-            const result = await LecturerService.updateLecturer(updatedLecturer);
+            // Convert back to API expected format if needed
+            const lecturerToSave = {
+                ...updatedLecturer,
+                lecturerName: updatedLecturer.name,
+                availability: updatedLecturer.availability.toString()
+            };
+
+            const result = await LecturerService.updateLecturer(lecturerToSave);
             if (result) {
                 setRefreshKey(prev => prev + 1);
                 toast.custom(<ToastCustom type="success" header="Success">Lecturer updated successfully</ToastCustom>);
@@ -81,20 +97,17 @@ const LecturerTable = () => {
         }
     };
 
-    const toggleAvailability = async (lecturerId: number, day: string) => {
+    const toggleAvailability = async (lecturerId: number) => {
         setIsLoading(true);
         try {
             const lecturer = lecturers.find(l => l.lecturerId === lecturerId);
             if (!lecturer) return;
 
-            const updatedAvailability = {
-                ...lecturer.availability,
-                [day]: !lecturer.availability[day]
-            };
+            const updatedAvailability = !lecturer.availability;
 
             const result = await LecturerService.updateLecturerAvailability(
                 lecturerId,
-                updatedAvailability
+                updatedAvailability.toString() // convert back to string if API expects it
             );
 
             if (result) {
@@ -114,12 +127,10 @@ const LecturerTable = () => {
         return dept ? dept.name : 'Unknown';
     };
 
-    const getFacultyName = (facultyId: number) => {
-        const fac = faculties.find(f => f.facultyId === facultyId);
-        return fac ? fac.name : 'Unknown';
-    };
-
-    const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    // const getFacultyName = (facultyId: number) => {
+    //     const fac = faculties.find(f => f.facultyId === facultyId);
+    //     return fac ? fac.facultyName : 'Unknown';
+    // };
 
     return (
         <div>
@@ -166,39 +177,43 @@ const LecturerTable = () => {
                                             {getDepartmentName(lecturer.departmentId)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            {getFacultyName(lecturer.facultyId)}
+                                            {lecturer.facultyName}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            {lecturer.designation || '-'}
                                             {lecturer.rank && <div className="text-sm text-gray-500">{lecturer.rank}</div>}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <div className="flex flex-wrap gap-1">
-                                                {daysOfWeek.map(day => (
-                                                    <button
-                                                        key={day}
-                                                        onClick={() => toggleAvailability(lecturer.lecturerId, day)}
-                                                        className={`px-2 py-1 text-xs rounded ${
-                                                            lecturer.availability?.[day]
-                                                                ? 'bg-green-100 text-green-800'
-                                                                : 'bg-red-100 text-red-800'
-                                                        }`}
-                                                        disabled={isLoading}
-                                                    >
-                                                        {day.substring(0, 3)}
-                                                    </button>
-                                                ))}
+                                            <div className="flex items-center">
+                                                <span className={`mr-3 text-sm font-medium ${!lecturer.availability ? 'text-[var(--color-dark)]' : 'text-gray-500'}`}>
+                                                    Not Available
+                                                </span>
+                                                <Switch
+                                                    checked ={lecturer.availability}
+                                                    onChange={() => toggleAvailability(lecturer.lecturerId!)}
+                                                    className={`${
+                                                        lecturer.availability ? 'bg-[var(--color-primary)]' : 'bg-gray-200'
+                                                    } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
+                                                >
+                                                    <span
+                                                        className={`${
+                                                            lecturer.availability ? 'translate-x-6' : 'translate-x-1'
+                                                        } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                                                    />
+                                                </Switch>
+                                                <span className={`ml-3 text-sm font-medium ${lecturer.availability ? 'text-[var(--color-dark)]' : 'text-gray-500'}`}>
+                                                    Available
+                                                </span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-right whitespace-nowrap">
                                             <button
-                                                onClick={() => handleEdit(lecturer.lecturerId)}
+                                                onClick={() => handleEdit(lecturer.lecturerId!)}
                                                 className="text-blue-600 hover:text-blue-900 mr-4"
                                             >
                                                 Edit
                                             </button>
                                             <button
-                                                onClick={() => handleDelete(lecturer.lecturerId)}
+                                                onClick={() => handleDelete(lecturer.lecturerId!)}
                                                 className="text-red-600 hover:text-red-900"
                                             >
                                                 Delete

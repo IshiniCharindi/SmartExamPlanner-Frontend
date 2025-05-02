@@ -15,11 +15,13 @@ const EditModal: React.FC<EditModalProps> = ({
                                                  onClose,
                                                  onSave
                                              }) => {
-    const [formData, setFormData] = useState(lecturerData);
+    const [formData, setFormData] = useState<any>(null);
     const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
-        setFormData(lecturerData);
+        if (lecturerData) {
+            setFormData(lecturerData);
+        }
     }, [lecturerData]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -32,6 +34,8 @@ const EditModal: React.FC<EditModalProps> = ({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!formData) return;
+
         setIsSaving(true);
         try {
             await onSave(formData);
@@ -40,10 +44,10 @@ const EditModal: React.FC<EditModalProps> = ({
         }
     };
 
-    if (!isOpen) return null;
+    if (!isOpen || !formData) return null;
 
     return (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <div className="fixed inset-0 bg-gray-600/80 overflow-y-auto h-full w-full">
             <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-1/2 lg:w-1/3 shadow-lg rounded-md bg-white">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-medium text-gray-900">Edit Lecturer</h3>
@@ -88,20 +92,6 @@ const EditModal: React.FC<EditModalProps> = ({
                                 </option>
                             ))}
                         </select>
-                    </div>
-
-                    <div>
-                        <label htmlFor="designation" className="block text-sm font-medium text-gray-700">
-                            Designation
-                        </label>
-                        <input
-                            type="text"
-                            id="designation"
-                            name="designation"
-                            value={formData.designation || ''}
-                            onChange={handleChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                        />
                     </div>
 
                     <div>

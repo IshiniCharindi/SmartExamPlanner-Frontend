@@ -4,15 +4,17 @@ import { Department, DepartmentService } from '../../Models/Department.tsx';
 import { Faculty, FacultyService } from '../../Models/Faculty';
 import toast from "react-hot-toast";
 import ToastCustom from "../Other/ToastCustom";
+import { Switch } from '@headlessui/react';
 
 const LecturerForm = () => {
     const [formData, setFormData] = useState({
         name: '',
-        designation: '',
+        availability: true,
         departmentId: 0,
         rank: '',
         email: '',
         phone: '',
+        facultyId: '',
     });
 
     const [departments, setDepartments] = useState<Department[]>([]);
@@ -25,10 +27,9 @@ const LecturerForm = () => {
         const fetchDepartments = async () => {
             try {
                 const depts = await DepartmentService.getAllDepartments();
+                console.log(depts)
                 setDepartments(depts);
 
-                const facs = await FacultyService.getAllFaculties();
-                setFaculties(facs);
             } catch (error) {
                 console.error('Error fetching departments:', error);
                 toast.custom(<ToastCustom type='error' header='Error'>Failed to load departments</ToastCustom>);
@@ -72,25 +73,37 @@ const LecturerForm = () => {
             setIsLoading(true);
             try {
                 // Get facultyId from selected department
-                const selectedDept = departments.find(d => d.departmentId === formData.departmentId);
-                if (!selectedDept) throw new Error('Department not found');
+                const selectedFaculty = departments.find(d => d.departmentId === Number(formData.departmentId));
+
+                console.log(formData.availability)
+                if (!selectedFaculty) {
+                    toast.custom(<ToastCustom type='error' header='Error'>Please select a valid department</ToastCustom>);
+                    return;
+                }
 
                 const lecturerData = {
-                    ...formData,
-                    facultyId: selectedDept.facultyId,
-                    availability: {} // Default empty availability
+                    name: formData.name,
+                    departmentId: formData.departmentId,
+                    facultyId: selectedFaculty?.facultyId,
+                    rank: formData.rank,
+                    email: formData.email,
+                    phone: formData.phone,
+                    availability: formData.availability
                 };
-
+                console.log("deoartmentId " , formData.departmentId)
+                console.log(lecturerData)
                 const result = await LecturerService.addLecturer(lecturerData);
 
+                console.log(result)
                 if(result){
                     setFormData({
                         name: '',
-                        designation: '',
-                        departmentId: 0,
+                        availability: true,
+                        departmentId:0,
                         rank: '',
                         email: '',
                         phone: '',
+                        facultyId: '',
                     });
 
                     toast.custom(<ToastCustom type='success' header='Lecturer'>Lecturer added successfully</ToastCustom>);
@@ -144,15 +157,15 @@ const LecturerForm = () => {
                             <select
                                 id="departmentId"
                                 name="departmentId"
-                                value={formData.departmentId}
+                                value={formData.departmentId || ''}
                                 onChange={handleChange}
                                 className={`w-full px-4 py-2 border ${
-                                    errors.departmentId ? 'border-red-500' : 'border-[var(--color-secondary)]'
-                                } rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]`}
+                                errors.departmentId ? 'border-red-500' : 'border-[var(--color-secondary)]'
+                            } rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]`}
                                 required
                                 disabled={isDeptLoading}
-                            >
-                                <option value={0}>Select Department</option>
+                                >
+                                <option value="">Select Department</option>
                                 {departments.map(dept => (
                                     <option key={dept.departmentId} value={dept.departmentId}>
                                         {dept.name}
@@ -162,22 +175,6 @@ const LecturerForm = () => {
                             {errors.departmentId && (
                                 <p className="mt-1 text-sm text-red-500">{errors.departmentId}</p>
                             )}
-                        </div>
-
-                        {/* Designation */}
-                        <div>
-                            <label htmlFor="designation" className="block text-sm font-medium text-[var(--color-dark)] mb-1">
-                                Designation
-                            </label>
-                            <input
-                                type="text"
-                                id="designation"
-                                name="designation"
-                                value={formData.designation}
-                                onChange={handleChange}
-                                className="w-full px-4 py-2 border border-[var(--color-secondary)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
-                                placeholder="e.g. Professor, Senior Lecturer"
-                            />
                         </div>
 
                         {/* Rank */}
@@ -226,6 +223,35 @@ const LecturerForm = () => {
                                 className="w-full px-4 py-2 border border-[var(--color-secondary)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
                                 placeholder="+1234567890"
                             />
+                        </div>
+
+                        {/* Availability Toggle */}
+                        <div >
+                            <label className="block text-sm font-medium text-[var(--color-dark)] mb-1">
+                                Availability
+                            </label>
+                            <div className="flex items-center">
+                                <span className={`mr-3 text-sm font-medium ${!formData.availability ? 'text-[var(--color-dark)]' : 'text-gray-500'}`}>
+                                    Not Available
+                                </span>
+                                <Switch
+                                    checked={formData.availability}
+                                    onChange={(value) => setFormData(prev => ({...prev, availability: value}))}
+                                    className={`${
+                                        formData.availability ? 'bg-[var(--color-primary)]' : 'bg-gray-200'
+                                    } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
+                                >
+                                    <span
+                                        className={`${
+                                            formData.availability ? 'translate-x-6' : 'translate-x-1'
+                                        } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                                    />
+                                </Switch>
+                                <span className={`ml-3 text-sm font-medium ${formData.availability ? 'text-[var(--color-dark)]' : 'text-gray-500'}`}>
+                                    Available
+                                </span>
+                            </div>
+                            <p className="mt-1 text-sm text-gray-500">Toggle to set lecturer's availability status</p>
                         </div>
                     </div>
 
