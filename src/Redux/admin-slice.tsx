@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import User from "../models/users";
+import {User} from "../Models/Users";
 
 const initialState: User | null = null;
 
 const adminSlice = createSlice({
     name: 'adminSlice',
-    initialState,
+    initialState: null as User | null,
     reducers: {
         setAdmin: (state, action: PayloadAction<User | null>) => {
             return action.payload;

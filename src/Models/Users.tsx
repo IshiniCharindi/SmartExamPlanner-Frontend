@@ -8,7 +8,7 @@ export interface User {
 }
 
 import { loginAttemptRequest } from "../Services/userRequests.tsx"
-import { AppDispatch } from "../redux/store"
+import { AppDispatch } from "../Redux/store"
 import { setAdmin } from "../redux/admin-slice"
 
 export class UserServices {
