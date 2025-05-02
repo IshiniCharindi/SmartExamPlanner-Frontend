@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import {ExamSession, ExamSessionService} from '../../Models/ExamSession'; // Adjust the path based on your project structure
+import {ExamSession, ExamSessionService} from '../../Models/ExamSession';
 import toast from "react-hot-toast";
 import ToastCustom from "../Other/ToastCustom";
-import {UserServices} from "../../Models/Users.tsx";
 
 const ExamScheduleForm = () => {
     const [formData, setFormData] = useState<Omit<ExamSession, 'sessionId'>>({
@@ -39,7 +38,6 @@ const ExamScheduleForm = () => {
         if (!formData.endTime) newErrors.endTime = 'End time is required';
         if (formData.studentCount <= 0) newErrors.studentCount = 'Student count must be positive';
 
-        // Validate time sequence
         if (formData.startTime && formData.endTime && formData.startTime >= formData.endTime) {
             newErrors.endTime = 'End time must be after start time';
         }
@@ -54,11 +52,9 @@ const ExamScheduleForm = () => {
         if (validateForm()) {
             setIsLoading(true);
             try {
-                // Simulate API call
                 await new Promise(resolve => setTimeout(resolve, 1500));
-                console.log('Form submitted:', formData);
                 const result = await ExamSessionService.addExamSession(formData);
-                // console.log("Result",result)
+
                 if(result){
                     setFormData({
                         examDate: '',
@@ -83,40 +79,43 @@ const ExamScheduleForm = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[var(--color-bg)] p-4 md:p-8">
-            <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="bg-[var(--color-admin)] p-6">
-                    <h2 className="text-2xl font-bold text-white">Add New Exam Session</h2>
-                </div>
+        <div className="p-6">
+            <div className="mb-6">
+                <h2 className="text-lg font-medium text-gray-900">Schedule New Exam Session</h2>
+                <p className="mt-1 text-sm text-gray-500">Fill in the details below to create a new exam session.</p>
+            </div>
 
-                <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Exam Date */}
-                        <div>
-                            <label htmlFor="examDate" className="block text-sm font-medium text-[var(--color-dark)] mb-1">
-                                Exam Date
-                            </label>
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+                    {/* Exam Date */}
+                    <div>
+                        <label htmlFor="examDate" className="block text-sm font-medium text-gray-700">
+                            Exam Date <span className="text-red-500">*</span>
+                        </label>
+                        <div className="mt-1">
                             <input
                                 type="date"
                                 id="examDate"
                                 name="examDate"
                                 value={formData.examDate}
                                 onChange={handleChange}
-                                className={`w-full px-4 py-2 border ${
-                                    errors.examDate ? 'border-red-500' : 'border-[var(--color-secondary)]'
-                                } rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]`}
+                                className={`block w-full rounded-md shadow-sm ${
+                                    errors.examDate ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                } sm:text-sm`}
                                 required
                             />
                             {errors.examDate && (
-                                <p className="mt-1 text-sm text-red-500">{errors.examDate}</p>
+                                <p className="mt-1 text-sm text-red-600">{errors.examDate}</p>
                             )}
                         </div>
+                    </div>
 
-                        {/* Subject Code */}
-                        <div>
-                            <label htmlFor="subjectCode" className="block text-sm font-medium text-[var(--color-dark)] mb-1">
-                                Subject Code (optional)
-                            </label>
+                    {/* Subject Code */}
+                    <div>
+                        <label htmlFor="subjectCode" className="block text-sm font-medium text-gray-700">
+                            Subject Code
+                        </label>
+                        <div className="mt-1">
                             <input
                                 type="text"
                                 id="subjectCode"
@@ -124,58 +123,64 @@ const ExamScheduleForm = () => {
                                 value={formData.subjectCode}
                                 onChange={handleChange}
                                 maxLength={10}
-                                className="w-full px-4 py-2 border border-[var(--color-secondary)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                                className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                 placeholder="e.g. MATH101"
                             />
                         </div>
+                    </div>
 
-                        {/* Start Time */}
-                        <div>
-                            <label htmlFor="startTime" className="block text-sm font-medium text-[var(--color-dark)] mb-1">
-                                Start Time
-                            </label>
+                    {/* Start Time */}
+                    <div>
+                        <label htmlFor="startTime" className="block text-sm font-medium text-gray-700">
+                            Start Time <span className="text-red-500">*</span>
+                        </label>
+                        <div className="mt-1">
                             <input
                                 type="time"
                                 id="startTime"
                                 name="startTime"
                                 value={formData.startTime}
                                 onChange={handleChange}
-                                className={`w-full px-4 py-2 border ${
-                                    errors.startTime ? 'border-red-500' : 'border-[var(--color-secondary)]'
-                                } rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]`}
+                                className={`block w-full rounded-md shadow-sm ${
+                                    errors.startTime ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                } sm:text-sm`}
                                 required
                             />
                             {errors.startTime && (
-                                <p className="mt-1 text-sm text-red-500">{errors.startTime}</p>
+                                <p className="mt-1 text-sm text-red-600">{errors.startTime}</p>
                             )}
                         </div>
+                    </div>
 
-                        {/* End Time */}
-                        <div>
-                            <label htmlFor="endTime" className="block text-sm font-medium text-[var(--color-dark)] mb-1">
-                                End Time
-                            </label>
+                    {/* End Time */}
+                    <div>
+                        <label htmlFor="endTime" className="block text-sm font-medium text-gray-700">
+                            End Time <span className="text-red-500">*</span>
+                        </label>
+                        <div className="mt-1">
                             <input
                                 type="time"
                                 id="endTime"
                                 name="endTime"
                                 value={formData.endTime}
                                 onChange={handleChange}
-                                className={`w-full px-4 py-2 border ${
-                                    errors.endTime ? 'border-red-500' : 'border-[var(--color-secondary)]'
-                                } rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]`}
+                                className={`block w-full rounded-md shadow-sm ${
+                                    errors.endTime ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                } sm:text-sm`}
                                 required
                             />
                             {errors.endTime && (
-                                <p className="mt-1 text-sm text-red-500">{errors.endTime}</p>
+                                <p className="mt-1 text-sm text-red-600">{errors.endTime}</p>
                             )}
                         </div>
+                    </div>
 
-                        {/* Student Count */}
-                        <div>
-                            <label htmlFor="studentCount" className="block text-sm font-medium text-[var(--color-dark)] mb-1">
-                                Number of Students
-                            </label>
+                    {/* Student Count */}
+                    <div>
+                        <label htmlFor="studentCount" className="block text-sm font-medium text-gray-700">
+                            Number of Students <span className="text-red-500">*</span>
+                        </label>
+                        <div className="mt-1">
                             <input
                                 type="number"
                                 id="studentCount"
@@ -183,36 +188,44 @@ const ExamScheduleForm = () => {
                                 value={formData.studentCount || ''}
                                 onChange={handleChange}
                                 min="1"
-                                className={`w-full px-4 py-2 border ${
-                                    errors.studentCount ? 'border-red-500' : 'border-[var(--color-secondary)]'
-                                } rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]`}
+                                className={`block w-full rounded-md shadow-sm ${
+                                    errors.studentCount ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                } sm:text-sm`}
                                 required
                             />
                             {errors.studentCount && (
-                                <p className="mt-1 text-sm text-red-500">{errors.studentCount}</p>
+                                <p className="mt-1 text-sm text-red-600">{errors.studentCount}</p>
                             )}
                         </div>
                     </div>
+                </div>
 
-                    <div className="flex justify-end space-x-4 pt-4">
-                        <button
-                            type="button"
-                            className="px-6 py-2 border border-[var(--color-dark)] rounded-md text-[var(--color-dark)] hover:bg-[var(--color-secondary)] transition-colors"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className={`px-6 py-2 bg-[var(--color-primary)] rounded-md text-white hover:bg-[var(--color-light)] transition-colors ${
-                                isLoading ? 'opacity-75 cursor-not-allowed' : ''
-                            }`}
-                        >
-                            {isLoading ? 'Saving...' : 'Save Exam Session'}
-                        </button>
-                    </div>
-                </form>
-            </div>
+                <div className="flex justify-end space-x-3 pt-2">
+                    <button
+                        type="button"
+                        className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#edb83d] hover:bg-[#d9a637] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#edb83d] ${
+                            isLoading ? 'opacity-75 cursor-not-allowed' : ''
+                        }`}
+                    >
+                        {isLoading ? (
+                            <>
+                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Saving...
+                            </>
+                        ) : 'Save Exam Session'}
+                    </button>
+                </div>
+            </form>
         </div>
     );
 };
