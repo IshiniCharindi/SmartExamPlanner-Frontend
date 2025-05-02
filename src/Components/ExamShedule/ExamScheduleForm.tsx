@@ -11,7 +11,7 @@ const ExamScheduleForm = () => {
         endTime: '',
         subjectCode: '',
         studentCount: 0,
-        degreeId: 0 // Add degreeId to form data
+        degreeId: 0
     });
 
     const [departments, setDepartments] = useState<Department[]>([]);
@@ -57,7 +57,7 @@ const ExamScheduleForm = () => {
         if (!formData.startTime) newErrors.startTime = 'Start time is required';
         if (!formData.endTime) newErrors.endTime = 'End time is required';
         if (formData.studentCount <= 0) newErrors.studentCount = 'Student count must be positive';
-        if (!formData.degreeId) newErrors.degreeId = 'Degree is required'; // Add validation for degree
+        if (!formData.degreeId || formData.degreeId === 0) newErrors.degreeId = 'Department is required';
 
         if (formData.startTime && formData.endTime && formData.startTime >= formData.endTime) {
             newErrors.endTime = 'End time must be after start time';
@@ -132,16 +132,16 @@ const ExamScheduleForm = () => {
                         </div>
                     </div>
 
-                    {/* Degree Dropdown */}
+                    {/* Department Dropdown (used for degreeId) */}
                     <div>
                         <label htmlFor="degreeId" className="block text-sm font-medium text-gray-700">
-                            Degree <span className="text-red-500">*</span>
+                            Department <span className="text-red-500">*</span>
                         </label>
                         <div className="mt-1">
                             <select
                                 id="degreeId"
                                 name="degreeId"
-                                value={formData.degreeId || ''}
+                                value={formData.degreeId}
                                 onChange={handleChange}
                                 className={`block w-full rounded-md shadow-sm ${
                                     errors.degreeId ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
@@ -149,10 +149,10 @@ const ExamScheduleForm = () => {
                                 required
                                 disabled={isDeptLoading}
                             >
-                                <option value="">Select Degree</option>
-                                {departments.map(degree => (
-                                    <option key={degree.departmentId} value={degree.departmentId}>
-                                        {degree.name}
+                                <option value={0}>Select Department</option>
+                                {departments.map(dept => (
+                                    <option key={dept.departmentId} value={dept.departmentId}>
+                                        {dept.name}
                                     </option>
                                 ))}
                             </select>
