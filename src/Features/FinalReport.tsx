@@ -83,23 +83,51 @@ const FinalReport = () => {
     // Efficiently assign venues based on available halls and student count
     const getVenueAssignments = (): VenueAssignment => {
         const assignments: VenueAssignment = {};
-        const hallsSorted = [...examHalls].sort((a, b) => a.maxCapacity - b.maxCapacity); // Sort halls by capacity (ascending)
-        const sessionsSorted = [...examSessions].sort((a, b) => a.studentCount - b.studentCount); // Sort sessions by student count (ascending)
-        const usedHalls = new Set<number>();
 
+        // Sort halls by their capacity in ascending order to efficiently assign halls
+        const hallsSorted = [...examHalls].sort((a, b) => a.maxCapacity - b.maxCapacity);
+        const usedHalls = new Set<number>();  // Keep track of halls already used
+
+        // Sort sessions by student count in descending order to start with the larger sessions
+        const sessionsSorted = [...examSessions].sort((a, b) => b.studentCount - a.studentCount);
+
+        // Create a map of remaining capacity in halls
+        const remainingCapacity: { [hallId: number]: number } = {};
+
+        // Loop through sessions and assign halls
         sessionsSorted.forEach(session => {
-            // Find a hall with sufficient capacity for the session
-            const suitableHall = hallsSorted.find(hall =>
-                hall.maxCapacity >= session.studentCount && !usedHalls.has(hall.hallId)
-            );
+            let suitableHall: ExamHall | undefined = undefined;
 
-            if (suitableHall) {
-                assignments[session.sessionId] = suitableHall.hallName;
-                usedHalls.add(suitableHall.hallId);
-            } else {
-                assignments[session.sessionId] = 'No suitable hall';
+            // Try to find the smallest hall that can accommodate the session
+            for (let i = 0; i < hallsSorted.length; i++) {
+                const hall = hallsSorted[i];
+
+                // If the hall has not been used and can accommodate the session
+                if (hall.maxCapacity >= session.studentCount && !usedHalls.has(hall.hallId)) {
+                    suitableHall = hall;
+                    usedHalls.add(hall.hallId);  // Mark this hall as used
+                    remainingCapacity[hall.hallId] = hall.maxCapacity - session.studentCount; // Track remaining space
+                    assignments[session.sessionId] = hall.hallName;
+                    break;
+                }
+            }
+
+            // If no suitable hall found, look for remaining space in previously used halls
+            if (!suitableHall) {
+                for (let i = 0; i < hallsSorted.length; i++) {
+                    const hall = hallsSorted[i];
+                    const remainingSpace = remainingCapacity[hall.hallId];
+
+                    // If there is enough space left and the hall hasn't been used already
+                    if (remainingSpace >= session.studentCount && usedHalls.has(hall.hallId)) {
+                        assignments[session.sessionId] = hall.hallName;
+                        remainingCapacity[hall.hallId] -= session.studentCount; // Update remaining space
+                        break;
+                    }
+                }
             }
         });
+
         return assignments;
     };
 
