@@ -1,14 +1,11 @@
-import React from "react";
-import StudentDataForm from "../Components/ExamShedule/StudentDataForm";
-import SignUp from "../Components/signup/signup";
-
 =======
+import React from 'react';
+import Dashboard from '../Components/Dashboard/dashboard.tsx';
 
 const BaseHome = () => {
     return (
         <div className="BaseHome">
-        <StudentDataForm/>
-        <SignUp/>
+            <Dashboard/>
         </div>
     );
 };

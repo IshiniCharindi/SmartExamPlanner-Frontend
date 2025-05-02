@@ -1,0 +1,106 @@
+.message-box {
+    position: relative;
+    right: 10px;
+    top: 30px;
+    opacity: 1;
+    color: black;
+    width: 420px;
+    border-radius: 5px;
+    padding: 6px;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    background-color: white;
+    box-shadow: 0px 0px 25px rgba(51, 41, 41, 0.25);
+}
+
+.message-box * {
+    font-family: sans-serif;
+}
+
+.message-box > .horizontal-comp {
+    position: relative;
+    display: flex;
+    min-height: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vertical-line {
+    position: relative;
+    width: 8px;
+    border-radius: 5px;
+    min-height: 100px;
+    background-color: #16AA7B;
+}
+
+.content {
+    flex-grow: 1;
+    display: flex;
+    min-height: 80px;
+    justify-content: space-around;
+    margin: 10px 5px 10px 0px;
+    flex-direction: column;
+}
+
+.content > p {
+    color: #929294;
+}
+
+.content > h3, p {
+    /* font-family: 'MYFonts'; */
+}
+
+@keyframes animate-width {
+    from {width: 100%;}
+    to {width: 0%;}
+}
+
+.time-line {
+    width: 0%;
+    margin-top: 5px;
+    height: 5px;
+    animation: animate-width 5s linear;
+    border-radius: 5px;
+    background-color:#D9D9D9;
+}
+
+
+#closeBtn {
+    background-color: transparent;
+    width: 13px;
+    border: 0;
+
+}
+
+#closeBtn:focus {
+    border: 0;
+}
+
+#closeBtn::after {
+    border: 0;
+    border-radius: 0;
+    box-shadow: 0;
+}
+
+.icon {
+    margin: 15px;
+}
+
+.error{
+    background-color: #F74850;
+}
+
+.success{
+    background-color: #16AA7B;
+}
+
+.warning{
+    background-color: #FFA401;
+}
+
+.info{
+    background-color: #027DC8;
+}

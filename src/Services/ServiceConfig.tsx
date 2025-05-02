@@ -5,6 +5,7 @@ const BEARER_TOKEN = 'Bearer dQc0W8Sb384CyCcIsQ8UMTrKlCOTf2wHGElAxlkHArfvzjaPsZ'
 const PUBLIC_ADDRESS = 'http://localhost:8001/'
 const localDomain = axios.create({
     baseURL: 'http://localhost:3001',
+    withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -16,8 +17,10 @@ const headers = {
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': BEARER_TOKEN
-    }
+        'Authorization': BEARER_TOKEN,
+        // 'auth_token':""
+    },
+    withCredentials: true
 }
 
 

@@ -33,7 +33,7 @@ const departments = [
   { value: 'other', label: 'Other' }
 ];
 
-const SignUp = () => {
+const Signup = () => {
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
@@ -316,4 +316,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Signup;
