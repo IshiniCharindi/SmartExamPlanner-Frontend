@@ -8,14 +8,13 @@ import EditModal from './EditModal'; // Import the EditModal component
 const ExamScheduleTable = () => {
     const [examSessions, setExamSessions] = useState<ExamSession[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [refreshKey, setRefreshKey] = useState(0);
+    const [refreshKey, setRefreshKey] = useState(0);  // Refresh Key to trigger page re-fetch
     const [isModalOpen, setIsModalOpen] = useState(false);  // Modal visibility
     const [selectedSession, setSelectedSession] = useState<ExamSession | null>(null);  // Selected session for editing
 
     const fetchExamSessions = async () => {
         try {
             const result = await ExamSessionService.getAllExamSessions();
-            console.log("All Sessions",result)
             if (Array.isArray(result)) {
                 setExamSessions(result);
             } else {
@@ -34,7 +33,7 @@ const ExamScheduleTable = () => {
 
     useEffect(() => {
         fetchExamSessions();
-    }, [refreshKey]);
+    }, [refreshKey]); // Re-fetch when refreshKey changes
 
     const handleEdit = (sessionId: string) => {
         const sessionToEdit = examSessions.find(session => session.sessionId === sessionId);
@@ -44,19 +43,32 @@ const ExamScheduleTable = () => {
         }
     };
 
-    const handleSave = (updatedSession: ExamSession) => {
-        // Here, you can make an API call to update the session data
-        console.log('Updated session:', updatedSession);
-        setIsModalOpen(false);  // Close the modal after saving
+    const handleSave = async (updatedSession: ExamSession) => {
+        setIsLoading(true);
+        try {
+            const result = await ExamSessionService.updateSession(updatedSession);  // Call update function
+            if (result) {
+                setRefreshKey(prev => prev + 1);  // Refresh the table after updating
+                toast.custom(<ToastCustom type="success" header="Exam Session">Exam session updated successfully</ToastCustom>);
+                setIsModalOpen(false);  // Close the modal after saving
+            } else {
+                toast.custom(<ToastCustom type="error" header="Exam Session">Failed to update exam session</ToastCustom>);
+            }
+        } catch (error) {
+            console.error('Error updating exam session:', error);
+            toast.custom(<ToastCustom type="error" header="Exam Session">Failed to update exam session</ToastCustom>);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleDelete = async (sessionId: string) => {
         if (window.confirm('Are you sure you want to delete this exam session?')) {
             setIsLoading(true);
             try {
-                const result = await ExamSessionService.deleteExamSession(sessionId);
+                const result = await ExamSessionService.deleteExamSession(sessionId);  // Delete session
                 if (result) {
-                    setRefreshKey(prev => prev + 1);
+                    setRefreshKey(prev => prev + 1);  // Refresh the table after deleting
                     toast.custom(<ToastCustom type="success" header="Success">Exam session deleted successfully</ToastCustom>);
                 }
             } catch (error) {
