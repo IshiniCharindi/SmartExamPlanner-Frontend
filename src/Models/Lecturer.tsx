@@ -6,7 +6,7 @@ import {
     deleteLecturerRequest,
 } from "../Services/LectureRequests";
 
-export interface Lecturer{
+export interface Lecturer {
     lecturerId?: number;
     name: string;
     departmentId: number;
@@ -47,6 +47,7 @@ export class LecturerService {
 
     static async updateLecturer(lecturerData: Lecturer): Promise<Lecturer | null> {
         try {
+            console.log(lecturerData)
             const response = await updateLecturerRequest(lecturerData);
             if (response.status === 200 && response.data.proceed) {
                 return response.data.content;

@@ -107,7 +107,7 @@ const LecturerTable = () => {
 
             const result = await LecturerService.updateLecturerAvailability(
                 lecturerId,
-                updatedAvailability.toString() // convert back to string if API expects it
+                updatedAvailability// convert back to string if API expects it
             );
 
             if (result) {
@@ -168,6 +168,7 @@ const LecturerTable = () => {
                                 </tr>
                             ) : (
                                 lecturers.map((lecturer) => (
+
                                     <tr key={lecturer.lecturerId}>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="font-medium text-gray-900">{lecturer.name}</div>
@@ -191,7 +192,7 @@ const LecturerTable = () => {
                                                     checked ={lecturer.availability}
                                                     onChange={() => toggleAvailability(lecturer.lecturerId!)}
                                                     className={`${
-                                                        lecturer.availability ? 'bg-[var(--color-primary)]' : 'bg-gray-200'
+                                                       lecturer.availability ? 'bg-[var(--color-primary)]' : 'bg-gray-200'
                                                     } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
                                                 >
                                                     <span

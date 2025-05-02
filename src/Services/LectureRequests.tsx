@@ -17,7 +17,8 @@ const updateLecturerRequest = async (lecturerData: Lecturer) => {
 }
 
 const updateLecturerAvailabilityRequest = async (lecturerId: number, availability: Record<string, boolean>) => {
-    return domain.patch('lecturer/availability', { lecturerId, availability }, headers);
+    console.log(availability,lecturerId)
+    return domain.put('lecturer/availability', { lecturerId, availability }, headers);
 }
 
 const deleteLecturerRequest = async (lecturerId: number) => {
