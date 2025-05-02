@@ -5,12 +5,18 @@ import Login from "./Components/login/Login.tsx";
 import Signup from "./Components/signup/Signup.tsx";
 import AddingExamSession from "./Features/AddingExamSession.tsx";
 import Dashboard from "./Components/Dashboard/dashboard.tsx";
+import {Toaster} from "react-hot-toast";
 function App() {
 
 
   return (
     <>
+      <Toaster
+          position="top-right"
+          reverseOrder={false}
+      />
       <BrowserRouter>
+
         <ScrollToTop />
         <Routes>
           <Route element={<BaseHome/>} path='/'/>
