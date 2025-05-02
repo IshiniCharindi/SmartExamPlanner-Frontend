@@ -6,6 +6,7 @@ export interface ExamSession {
         startTime: string;
         endTime: string;
         subjectCode?: string;
+        degree?:string,
         studentCount: number;
     }
 export class ExamSessionService {
