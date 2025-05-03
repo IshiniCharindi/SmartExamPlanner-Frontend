@@ -53,4 +53,34 @@ export default tseslint.config({
 })
 ```
 
+# 📦 Smart Exam Planner – Frontend
+
+This is the frontend service for the *Smart Exam Planner* application, developed using *React.js, **Typescript* and *Tailwind CSS*.
+
+---
+
+## 🚀 Getting Started
+
+Follow these steps to set up and run the frontend on your local machine.
+
+
+---
+
+## ⚙️ Step-by-Step Setup
+
+### 1. Clone the Repository
+
+
+### 2. Install Dependencies
+
+npm install
+
+
+### 3. Start the Server
+
+npm run dev
+
+
+
+
 BITBELLES - SC052
