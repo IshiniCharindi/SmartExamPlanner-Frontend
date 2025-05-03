@@ -79,7 +79,10 @@ npm install
 ### 3. Start the Server
 
 npm run dev
+### 4. Use these credentials to login to the system as an admin
+username=admin
 
+password=admin123
 
 
 
