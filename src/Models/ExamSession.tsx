@@ -6,8 +6,10 @@ export interface ExamSession {
         startTime: string;
         endTime: string;
         subjectCode?: string;
-        departmentId: number; // Changed from string to number to match database schema
+        departmentId: number;
+        // Changed from string to number to match database schema
         studentCount: number;
+        degreeName?:string;
 }
 export class ExamSessionService {
         static async addExamSession(examSession: ExamSession): Promise<boolean> {

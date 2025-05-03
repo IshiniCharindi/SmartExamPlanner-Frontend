@@ -28,6 +28,7 @@ const FinalReport = () => {
                 ]);
                 console.log("Halls", halls);
                 console.log("session", sessions);
+
                 if (sessions) {
                     setExamSessions(sessions);
                 } else {
@@ -176,7 +177,7 @@ const FinalReport = () => {
                     <th className="border px-4 py-2">Day</th>
                     <th className="border px-4 py-2">Time</th>
                     <th className="border px-4 py-2">Subject</th>
-                    <th className="border px-4 py-2">Department</th>
+                    <th className="border px-4 py-2">Degree</th>
                     <th className="border px-4 py-2">Venue</th>
                     <th className="border px-4 py-2">Supervisors</th>
                     <th className="border px-4 py-2">Invigilators</th>
@@ -194,8 +195,9 @@ const FinalReport = () => {
                             <td className="border px-3 py-2">
                                 {formatTime(session.startTime)} - {formatTime(session.endTime)}
                             </td>
-                            <td className="border px-3 py-2">{session.subjectCode || 'N/A'}</td>
-                            <td className="border px-3 py-2">{session.departmentId || 'N/A'}</td>
+                            <td className="border px-3 py-2">{session.subjectCode
+                                || 'N/A'}</td>
+                            <td className="border px-3 py-2">{session.degreeName || 'N/A'}</td>
                             <td className="border px-3 py-2">{venue}</td>
                             <td className="border px-3 py-2">
                                 {staff.supervisors.length
