@@ -92,37 +92,40 @@ const FinalReport = () => {
         // Sort sessions by student count in descending order to start with the larger sessions
         const sessionsSorted = [...examSessions].sort((a, b) => b.studentCount - a.studentCount);
 
-        // Create a map of remaining capacity in halls
-        const remainingCapacity: { [hallId: number]: number } = {};
+        // Create a map to track the used halls with a specific date and time
+        const hallUsageMap: { [key: string]: number[] } = {}; // key is `date + time` and value is list of hallIds used
 
         // Loop through sessions and assign halls
         sessionsSorted.forEach(session => {
             let suitableHall: ExamHall | undefined = undefined;
+            const sessionKey = `${session.examDate}-${session.startTime}`; // Key for current session's date and start time
 
-            // Try to find the smallest hall that can accommodate the session
+            // If no hall is assigned yet, find a hall that can accommodate the session
+            if (!hallUsageMap[sessionKey]) hallUsageMap[sessionKey] = [];
+
+            // Try to find a hall that can accommodate the session and isn't already in use
             for (let i = 0; i < hallsSorted.length; i++) {
                 const hall = hallsSorted[i];
 
-                // If the hall has not been used and can accommodate the session
-                if (hall.maxCapacity >= session.studentCount && !usedHalls.has(hall.hallId)) {
+                // Check if hall is not used in this time slot and has enough capacity
+                if (!hallUsageMap[sessionKey].includes(hall.hallId) && hall.maxCapacity >= session.studentCount) {
                     suitableHall = hall;
                     usedHalls.add(hall.hallId);  // Mark this hall as used
-                    remainingCapacity[hall.hallId] = hall.maxCapacity - session.studentCount; // Track remaining space
-                    assignments[session.sessionId] = hall.hallName;
+                    assignments[session.sessionId] = hall.hallName; // Assign the hall
+                    hallUsageMap[sessionKey].push(hall.hallId); // Track hall usage for this date and time
                     break;
                 }
             }
 
-            // If no suitable hall found, look for remaining space in previously used halls
+            // If no suitable hall found in the same time slot, check for previously used halls with remaining space
             if (!suitableHall) {
                 for (let i = 0; i < hallsSorted.length; i++) {
                     const hall = hallsSorted[i];
-                    const remainingSpace = remainingCapacity[hall.hallId];
 
-                    // If there is enough space left and the hall hasn't been used already
-                    if (remainingSpace >= session.studentCount && usedHalls.has(hall.hallId)) {
+                    // If the hall has remaining space, hasn't been used in this time slot and hasn't been assigned yet
+                    if (usedHalls.has(hall.hallId) && hall.maxCapacity >= session.studentCount) {
                         assignments[session.sessionId] = hall.hallName;
-                        remainingCapacity[hall.hallId] -= session.studentCount; // Update remaining space
+                        hallUsageMap[sessionKey].push(hall.hallId); // Track hall usage for this date and time
                         break;
                     }
                 }
@@ -195,8 +198,7 @@ const FinalReport = () => {
                             <td className="border px-3 py-2">
                                 {formatTime(session.startTime)} - {formatTime(session.endTime)}
                             </td>
-                            <td className="border px-3 py-2">{session.subjectCode
-                                || 'N/A'}</td>
+                            <td className="border px-3 py-2">{session.subjectCode || 'N/A'}</td>
                             <td className="border px-3 py-2">{session.degreeName || 'N/A'}</td>
                             <td className="border px-3 py-2">{venue}</td>
                             <td className="border px-3 py-2">
